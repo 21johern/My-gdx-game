@@ -6,16 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.MyGdxGame;
 
 public class MenuState extends State {
-    private Texture background;
-    private Texture playBtn;
+
 
 
     public MenuState(GameStateManager stateManager) {
         super(stateManager);
-        // Change background once we have one.
-        background = new Texture("bg.png");
-        // Make our own Play Button and insert image.
-        playBtn = new Texture("playBtn.png");
     }
 
     @Override
@@ -33,15 +28,11 @@ public class MenuState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        sb.begin();
-        sb.draw(background, 0, 0, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
-        sb.draw(playBtn, (MyGdxGame.WIDTH / 2) - (playBtn.getWidth() / 2), MyGdxGame.HEIGHT / 2);
-        sb.end();
+
     }
 
     @Override
     public void dispose() {
-        background.dispose();
-        playBtn.dispose();
+
     }
 }
