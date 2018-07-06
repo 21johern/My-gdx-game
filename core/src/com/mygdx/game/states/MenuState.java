@@ -6,12 +6,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.MyGdxGame;
 
 public class MenuState extends State {
-
-
+    Texture background;
 
     public MenuState(GameStateManager stateManager) {
         super(stateManager);
+        background = new Texture("MenuMap.png");
     }
+
 
     @Override
     protected void handleInput() {
@@ -28,7 +29,9 @@ public class MenuState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-
+        sb.begin();
+        sb.draw(background,0,0);
+        sb.end();
     }
 
     @Override
