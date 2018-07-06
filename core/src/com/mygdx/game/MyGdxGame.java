@@ -11,8 +11,7 @@ import com.mygdx.game.states.MenuState;
 public class MyGdxGame extends ApplicationAdapter {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 480;
-	// Change Once We have an actual Title
-	public static final String TITLE = "Flappy Bird";
+	public static final String TITLE = "player";
 	private GameStateManager gsm;
 	SpriteBatch batch;
 	Texture img;
