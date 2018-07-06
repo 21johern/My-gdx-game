@@ -18,11 +18,11 @@ public class Player {private Vector3 position;
     }
 
     public void update(float dt){
-        anim.update(dt);
         velocity.add(0, GRAVITY, 0);
         velocity.scl(dt);
         position.add(0, velocity.y, 0);
         velocity.scl(1 / dt);
+        anim.update(dt);
     }
     public TextureRegion getTexture() {
         return anim.getFrame();

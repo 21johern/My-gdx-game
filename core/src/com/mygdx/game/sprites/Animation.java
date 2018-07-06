@@ -18,22 +18,18 @@ public class Animation {
         frames = new Array<TextureRegion>();
         int frameWidth = region.getRegionWidth() / row;
         int frameHeight = region.getRegionHeight()/ col;
-        for(int i = 0; i < frameCount; i++){
-            frames.add(new TextureRegion(region, i * frameWidth, 0, frameWidth, region.getRegionHeight()));
-            int count = 0;
-            for (int r = 0; r < row; r++){
-                for (int c = 0; c < col; c++) {
-                    frames.add(
-                            new TextureRegion(
-                                    region,
-                                    c * frameWidth,
-                                    r * frameHeight,
-                                    frameWidth,
-                                    frameHeight
+        for (int r = 0; r < row; r++){
+            for (int c = 0; c < col; c++) {
+                frames.add(
+                        new TextureRegion(
+                                region,
+                                c * frameWidth,
+                                r * frameHeight,
+                                frameWidth,
+                                frameHeight
 
-                            )
-                    );
-                }
+                        )
+                );
             }
         }
         this.frameCount = frameCount;
