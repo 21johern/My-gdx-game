@@ -9,10 +9,11 @@ import com.mygdx.game.sprites.Player;
 
 public class PlayState extends State{
     private Player player;
-
+    private Texture bg;
     public PlayState(GameStateManager stateManager) {
         super(stateManager);
 
+        bg = new Texture("map1.tmx");
         // Change image to the correct background once we have it
         player = new Player(50, 100);
         cam.setToOrtho(false, MyGdxGame.WIDTH/1, MyGdxGame.HEIGHT/1);
