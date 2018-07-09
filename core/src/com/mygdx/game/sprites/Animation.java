@@ -14,6 +14,8 @@ public class Animation {
     private int frameCount;
     private int frame;
 
+
+
     public Animation(TextureRegion region, int frameCount, float cycleTime, int row, int col){
         frames = new Array<TextureRegion>();
         int frameWidth = region.getRegionWidth() / row;
