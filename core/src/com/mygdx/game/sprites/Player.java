@@ -28,4 +28,8 @@ public class Player {private Vector3 position;
     public TextureRegion getTexture() {
         return anim.getFrame();
     }
+
+    public Vector3 getPosition() {
+        return position;
+    }
 }

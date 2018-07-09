@@ -4,20 +4,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.sprites.Player;
+
 
 public class PlayState extends State{
     private Player player;
     private Controller controller;
     private ShapeRenderer shapeRenderer;
+    private Rectangle rectangle;
     Texture bg;
     public static final String TAG = PlayState.class.getName();
 
     public PlayState(GameStateManager stateManager) {
         super(stateManager);
         shapeRenderer = new ShapeRenderer();
+        rectangle = new Rectangle(224, 320, 32, 50);
         bg = new Texture("MenuMap.png");
         Gdx.app.log(TAG, "Application Listener Created");
         controller = new Controller();
@@ -37,6 +41,7 @@ public class PlayState extends State{
     @Override
     public void update(float dt) {
         player.update(dt);
+        rectangle.setPosition(player.getPosition().x,player.getPosition().y);
     }
 
     @Override
@@ -46,10 +51,7 @@ public class PlayState extends State{
         sb.draw(bg,0,0);
         sb.draw(player.getTexture(),224,320,32,50);
         sb.end();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
-        shapeRenderer.rect(224,230,220,200);
-        shapeRenderer.end();
+
         controller.draw();
     }
 
