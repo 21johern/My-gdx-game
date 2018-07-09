@@ -10,6 +10,7 @@ public class Player {private Vector3 position;
     private Texture character;
     private Animation anim;
     private static final int GRAVITY = -15;
+
     public Player(int x, int y){
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0, 0, 0);
