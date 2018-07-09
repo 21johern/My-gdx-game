@@ -9,6 +9,8 @@ import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.sprites.Player;
 
+import javax.swing.JOptionPane;
+
 public class PlayState extends State{
     private Player player;
     private Controller controller;
@@ -19,10 +21,8 @@ public class PlayState extends State{
         bg = new Texture("MenuMap.png");
         controller = new Controller();
         // Change image to the correct background once we have it
-        player = new Player(50, 100);
+        player = new Player(224, 320);
         cam.setToOrtho(false, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
-
-
 
     }
 
@@ -33,6 +33,15 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
+        if(controller.isUpPressed()) {
+
+        } else if(controller.isDownPressed()) {
+
+        } else if(controller.isLeftPressed()) {
+            player.walkLeft();
+        } else if(controller.isRightPressed()) {
+            player.walkRight();
+        }
         player.update(dt);
     }
 
@@ -41,7 +50,7 @@ public class PlayState extends State{
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(bg,0,0);
-        sb.draw(player.getTexture(),224,320,32,50);
+        sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,32, 50);
         sb.end();
 
         controller.draw();
