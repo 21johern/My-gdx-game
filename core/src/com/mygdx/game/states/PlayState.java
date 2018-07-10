@@ -57,7 +57,8 @@ public class PlayState extends State{
         sb.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
-        shapeRenderer.rect(224,230,220,200);
+        // Hitbox needs to be fixed.
+//        shapeRenderer.rect(224,230,220,200);
         shapeRenderer.end();
         controller.draw();
     }
