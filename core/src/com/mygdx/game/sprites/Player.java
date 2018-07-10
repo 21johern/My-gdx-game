@@ -117,4 +117,8 @@ public class Player {
         }
         return walk.getFrame();
     }
+
+    public Vector3 getPosition() {
+        return position;
+    }
 }
