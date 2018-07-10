@@ -5,7 +5,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 
-public class Player {private Vector3 position;
+import javax.swing.JOptionPane;
+
+public class Player {
+    public Vector3 getPosition() {
+        return position;
+    }
+
+    private Vector3 position;
     private Vector3 velocity;
     private Texture character;
     private Animation anim;
@@ -19,11 +26,26 @@ public class Player {private Vector3 position;
     }
 
     public void update(float dt){
-        velocity.add(0, GRAVITY, 0);
+//        velocity.add(0, GRAVITY, 0);
         velocity.scl(dt);
-        position.add(0, velocity.y, 0);
+        position.add(velocity.x, velocity.y, 0);
         velocity.scl(1 / dt);
         anim.update(dt);
+        if (velocity.x < 0) {
+            velocity.x += 1;
+        }
+        if (velocity.x > 0) {
+            velocity.x -= 1;
+        }
+    }
+
+    public void walkLeft() {
+        velocity.set(-50, 0, 0);
+
+    }
+    public void walkRight() {
+        velocity.set(+50, 0, 0);
+
     }
     public TextureRegion getTexture() {
         return anim.getFrame();
