@@ -18,8 +18,8 @@ public class Animation {
 
     public Animation(TextureRegion region, int frameCount, float cycleTime, int row, int col){
         frames = new Array<TextureRegion>();
-        int frameWidth = region.getRegionWidth() / row;
-        int frameHeight = region.getRegionHeight()/ col;
+        int frameWidth = region.getRegionWidth() / col;
+        int frameHeight = region.getRegionHeight()/ row;
         for (int r = 0; r < row; r++){
             for (int c = 0; c < col; c++) {
                 frames.add(
@@ -56,5 +56,13 @@ public class Animation {
     }
     public TextureRegion getFrame(){
         return frames.get(frame);
+    }
+
+    public void pause() {
+        frame = 0;
+    }
+
+    public void resume(float dt) {
+        update(dt);
     }
 }
