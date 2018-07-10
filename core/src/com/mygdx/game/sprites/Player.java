@@ -10,9 +10,6 @@ import com.badlogic.gdx.utils.Timer;
 import javax.swing.JOptionPane;
 
 public class Player {
-    public Vector3 getPosition() {
-        return position;
-    }
 
     private Vector3 position;
     private Vector3 velocity;
