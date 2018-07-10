@@ -37,7 +37,7 @@ public class PlayState extends State{
     @Override
     public void update(float dt) {
         if(controller.isUpPressed()) {
-
+            player.jump();
         } else if(controller.isDownPressed()) {
 
         } else if(controller.isLeftPressed()) {
@@ -53,7 +53,7 @@ public class PlayState extends State{
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(bg,0,0);
-        sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,32, 50);
+        sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,player.getWidth(), player.getHeight());
         sb.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
