@@ -5,9 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.sprites.EnemyM;
@@ -15,26 +12,77 @@ import com.mygdx.game.sprites.EnemyS;
 import com.mygdx.game.sprites.Player;
 
 public class PlayState extends State{
+    OrthogonalTiledMapRenderer renderer;
+    private TiledMap map;
     private Player player;
     private EnemyS enemyS;
     private Controller controller;
     private ShapeRenderer shapeRenderer;
-    private Rectangle rectangle;
-    private EnemyM enemyM;
-    private OrthographicCamera gameCam;
-    private Viewport gamePort;
     Texture bg;
-    private MapObjects mapObjects;
     public static final String TAG = PlayState.class.getName();
+
+    // Creates lava objects from map then fetches the ones specifically in the lava layer.
+    public TiledMapTileLayer lavaCollider;
+    public MapObjects lavaObjects;
+
+    public TiledMapTileLayer waterCollider;
+    public MapObjects waterObjects;
+
+    public TiledMapTileLayer chestCollider;
+    public MapObjects chestObjects;
+
+    public TiledMapTileLayer doorCollider;
+    public MapObjects doorObjects;
+
+    public TiledMapTileLayer leftWallCollider;
+    public MapObjects leftWallObjects;
+
+    public TiledMapTileLayer rightWallCollider;
+    public MapObjects rightWallObjects;
+
+    public TiledMapTileLayer ceilingCollider;
+    public MapObjects ceilingObjects;
+
+    public TiledMapTileLayer floorCollider;
+    public MapObjects floorObjects;
+
 
     public PlayState(GameStateManager stateManager) {
         super(stateManager);
+        map = new TmxMapLoader().load("MenuMap.tmx");
+        renderer = new OrthogonalTiledMapRenderer(map);
         shapeRenderer = new ShapeRenderer();
-        rectangle = new Rectangle(224, 320, 32, 50);
         bg = new Texture("MenuMap.png");
         Gdx.app.log(TAG, "Application Listener Created");
         //mapObjects = .getLayers().get("Collision");
         controller = new Controller();
+
+        // Gets Lava objects and draws polygons.
+        lavaCollider = (TiledMapTileLayer)map.getLayers().get("Lava");
+        lavaObjects = lavaCollider.getObjects();
+
+        waterCollider = (TiledMapTileLayer)map.getLayers().get("Water");
+        waterObjects = waterCollider.getObjects();
+
+        chestCollider = (TiledMapTileLayer)map.getLayers().get("Chest");
+        chestObjects = chestCollider.getObjects();
+
+        doorCollider = (TiledMapTileLayer)map.getLayers().get("Exit");
+        doorObjects = doorCollider.getObjects();
+
+        leftWallCollider = (TiledMapTileLayer)map.getLayers().get("leftWall");
+        leftWallObjects = leftWallCollider.getObjects();
+
+        rightWallCollider = (TiledMapTileLayer)map.getLayers().get("rightWall");
+        rightWallObjects = rightWallCollider.getObjects();
+
+        ceilingCollider = (TiledMapTileLayer)map.getLayers().get("Ceiling");
+        ceilingObjects = rightWallCollider.getObjects();
+
+        floorCollider = (TiledMapTileLayer)map.getLayers().get("Ground");
+        floorObjects = floorCollider.getObjects();
+
+
         // Change image to the correct background once we have it
         player = new Player(224, 320);
         enemyS = new EnemyS(250, 300);
@@ -84,12 +132,12 @@ public class PlayState extends State{
 
     @Override
     public void render(SpriteBatch sb) {
+        renderer.setView(cam);
+        renderer.render();
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(bg,0,0);
-        sb.draw(enemyS.getTexture(),enemyS.getPosition().x,enemyS.getPosition().y,50, 50);
-        sb.draw(enemyM.getTexture(),enemyM.getPosition().x, enemyM.getPosition().y, 80, 80);
-        sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,32, 50);
+        sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,player.getWidth(), player.getHeight());
         sb.end();
 
 
