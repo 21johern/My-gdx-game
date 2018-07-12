@@ -57,4 +57,12 @@ public class Animation {
     public TextureRegion getFrame(){
         return frames.get(frame);
     }
+
+    public void pause() {
+        frame = 0;
+    }
+
+    public void resume(float dt) {
+        update(dt);
+    }
 }
