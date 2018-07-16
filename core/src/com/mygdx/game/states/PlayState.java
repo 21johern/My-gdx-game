@@ -1,27 +1,19 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.sprites.EnemyM;
+import com.mygdx.game.sprites.EnemyS;
 import com.mygdx.game.sprites.Player;
-
-import javax.swing.JOptionPane;
 
 public class PlayState extends State{
     public static final String TAG = PlayState.class.getName();
@@ -30,12 +22,10 @@ public class PlayState extends State{
     OrthogonalTiledMapRenderer renderer;
     private TiledMap map;
     private Player player;
+    private EnemyS enemyS;
     private Controller controller;
     private ShapeRenderer shapeRenderer;
-
-    Array<Body> floors;
-    BodyDef floorDef;
-    PolygonShape floorShape;
+    public static final String TAG = PlayState.class.getName();
 
     // Creates lava objects from map then fetches the ones specifically in the lava layer.
 //    public TiledMapTileLayer lavaCollider;
@@ -78,7 +68,9 @@ public class PlayState extends State{
         map = new TmxMapLoader().load("MenuMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, State.PIXEL_TO_METER);
         shapeRenderer = new ShapeRenderer();
+        bg = new Texture("MenuMap.png");
         Gdx.app.log(TAG, "Application Listener Created");
+        //mapObjects = .getLayers().get("Collision");
         controller = new Controller();
 
         floorObjects = map.getLayers().get("Ground").getObjects();
@@ -101,17 +93,34 @@ public class PlayState extends State{
         }
 
         // Gets Lava objects and draws polygons.
-//        lavaCollider = (TiledMapTileLayer)map.getLayers().get("Lava");
-//        lavaObjects = lavaCollider.getObjects();
-//
-//        waterCollider = (TiledMapTileLayer)map.getLayers().get("Water");
-//        waterObjects = waterCollider.getObjects();
-//
-//        chestCollider = (TiledMapTileLayer)map.getLayers().get("Chest");
-//        chestObjects = chestCollider.getObjects();
-//
-//        doorCollider = (TiledMapTileLayer)map.getLayers().get("Exit");
-//        doorObjects = doorCollider.getObjects();
+        lavaCollider = (TiledMapTileLayer)map.getLayers().get("Lava");
+        lavaObjects = lavaCollider.getObjects();
+
+        waterCollider = (TiledMapTileLayer)map.getLayers().get("Water");
+        waterObjects = waterCollider.getObjects();
+
+        chestCollider = (TiledMapTileLayer)map.getLayers().get("Chest");
+        chestObjects = chestCollider.getObjects();
+
+        doorCollider = (TiledMapTileLayer)map.getLayers().get("Exit");
+        doorObjects = doorCollider.getObjects();
+
+        leftWallCollider = (TiledMapTileLayer)map.getLayers().get("leftWall");
+        leftWallObjects = leftWallCollider.getObjects();
+
+        rightWallCollider = (TiledMapTileLayer)map.getLayers().get("rightWall");
+        rightWallObjects = rightWallCollider.getObjects();
+
+        ceilingCollider = (TiledMapTileLayer)map.getLayers().get("Ceiling");
+        ceilingObjects = rightWallCollider.getObjects();
+
+        floorCollider = (TiledMapTileLayer)map.getLayers().get("Ground");
+        floorObjects = floorCollider.getObjects();
+
+
+        // Change image to the correct background once we have it
+        player = new Player(224, 320);
+        cam.setToOrtho(false, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
 
     }
 
@@ -122,8 +131,24 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
+        if (!(cam.position.x - MyGdxGame.WIDTH / 4 < 0)){
+                cam.position.set(player.getPosition());
+            if ((cam.position.x + MyGdxGame.WIDTH / 4 > 757))
+                cam.position.set(player.getPosition());
+
+        } else {
+
+        }
+        cam.update();
+        System.out.println(player.getPosition().x);
+        if(player.getPosition().x < 0){
+            player.getPosition().x = 0;
+        }
+        if(player.getPosition().x > 757){
+            player.getPosition().x = 757;
+        }
         if(controller.isUpPressed()) {
-            player.jump();
+
         } else if(controller.isDownPressed()) {
 
         } else if(controller.isLeftPressed()) {
@@ -132,6 +157,11 @@ public class PlayState extends State{
             player.walkRight();
         }
         player.update(dt);
+        rectangle.setPosition(player.getPosition().x,player.getPosition().y);
+        enemyS.update(dt);
+        enemyM.update(dt);
+
+
     }
 
     @Override
@@ -140,10 +170,13 @@ public class PlayState extends State{
         renderer.setView(cam);
         renderer.render();
         sb.begin();
-        sb.draw(player.getTexture(),player.getPosition().x,
-                player.getPosition().y,player.getWidth()*State.PIXEL_TO_METER,
-                player.getHeight()*State.PIXEL_TO_METER);
+        sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,player.getWidth(), player.getHeight());
         sb.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
+        // Hitbox needs to be fixed.
+//        shapeRenderer.rect(224,230,220,200);
+        shapeRenderer.end();
         controller.draw();
         cam.update();
         debugRenderer.render(world, cam.combined);

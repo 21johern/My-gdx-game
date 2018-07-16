@@ -5,26 +5,29 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 
-public class EnemyS {
+public class EnemyM {
     public Vector3 getPosition() {
         return position;
     }
 
     private Vector3 position;
     private Vector3 velocity;
-    private Texture enemyS;
+    private Texture enemyM;
     private Animation anim;
-    //private static final int GRAVITY = -15;
+    private static final int GRAVITY = -15;
+    private boolean faceRight;
 
-    public EnemyS(int x, int y){
+    public EnemyM(int x, int y){
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0, 0, 0);
-        enemyS = new Texture("EnemyS.png");
-        anim = new Animation(new TextureRegion(enemyS),12, 0.4f,4,3 );
+        faceRight = true;
+        enemyM = new Texture("EnemyM.png");
+        anim = new Animation(new TextureRegion(enemyM),6, 1f,3,3 );
     }
 
     public void update(float dt){
-        //velocity.add(0, GRAVITY, 0);
+        anim.update(dt);
+//        velocity.add(0, GRAVITY, 0);
         velocity.scl(dt);
         position.add(velocity.x, velocity.y, 0);
         velocity.scl(1 / dt);
@@ -35,8 +38,8 @@ public class EnemyS {
         if (velocity.x > 0) {
             velocity.x -= 1;
         }
-    }
 
+    }
     public TextureRegion getTexture() {
         return anim.getFrame();
     }
