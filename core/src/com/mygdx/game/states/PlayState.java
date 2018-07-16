@@ -1,20 +1,22 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.sprites.Player;
@@ -22,19 +24,18 @@ import com.mygdx.game.sprites.Player;
 import javax.swing.JOptionPane;
 
 public class PlayState extends State{
+    public static final String TAG = PlayState.class.getName();
+    public World world;
+    public Box2DDebugRenderer debugRenderer;
     OrthogonalTiledMapRenderer renderer;
     private TiledMap map;
     private Player player;
     private Controller controller;
     private ShapeRenderer shapeRenderer;
-    public static final String TAG = PlayState.class.getName();
 
-    public World world;
-    public Box2DDebugRenderer debugRenderer;
-
-
-
-
+    Array<Body> floors;
+    BodyDef floorDef;
+    PolygonShape floorShape;
 
     // Creates lava objects from map then fetches the ones specifically in the lava layer.
 //    public TiledMapTileLayer lavaCollider;
@@ -58,33 +59,46 @@ public class PlayState extends State{
 //    public TiledMapTileLayer ceilingCollider;
 //    public MapObjects ceilingObjects;
 //
-//    public TiledMapTileLayer floorCollider;
-//    public MapObjects floorObjects;
+    public MapObjects floorObjects;
 
 
     public PlayState(GameStateManager stateManager) {
         super(stateManager);
 
         // Change image to the correct background once we have it
-        cam.setToOrtho(false, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
+        cam.setToOrtho(false, MyGdxGame.WIDTH*State.PIXEL_TO_METER, MyGdxGame.HEIGHT*State.PIXEL_TO_METER);
 
         Box2D.init();
-        world = new World(new Vector2(0, -10), true);
+        // the y vaue here is the gravity
+        world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
 
-        player = new Player(224, 320, this);
-
-
-
-        // Change image to the correct background once we have it
-        cam.setToOrtho(false, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
-
+        player = new Player(7, 10, this);
 
         map = new TmxMapLoader().load("MenuMap.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer = new OrthogonalTiledMapRenderer(map, State.PIXEL_TO_METER);
         shapeRenderer = new ShapeRenderer();
         Gdx.app.log(TAG, "Application Listener Created");
         controller = new Controller();
+
+        floorObjects = map.getLayers().get("Ground").getObjects();
+
+        floors = new Array<Body>();
+        floorDef = new BodyDef();
+        floorShape = new PolygonShape();
+
+        int counter = 0;
+        for (PolygonMapObject obj : floorObjects.getByType(PolygonMapObject.class)) {
+            floorDef.position.set(obj.getPolygon().getX() * State.PIXEL_TO_METER, obj.getPolygon().getY() * State.PIXEL_TO_METER);
+            floors.add(world.createBody(floorDef));
+            float[] vertices = obj.getPolygon().getVertices();
+            for (int i = 0; i < vertices.length; i++) {
+                vertices[i] = vertices[i] * State.PIXEL_TO_METER;
+            }
+            floorShape.set(vertices);
+            floors.get(counter).createFixture(floorShape, 0.0f);
+            counter++;
+        }
 
         // Gets Lava objects and draws polygons.
 //        lavaCollider = (TiledMapTileLayer)map.getLayers().get("Lava");
@@ -98,18 +112,6 @@ public class PlayState extends State{
 //
 //        doorCollider = (TiledMapTileLayer)map.getLayers().get("Exit");
 //        doorObjects = doorCollider.getObjects();
-//
-//        leftWallCollider = (TiledMapTileLayer)map.getLayers().get("leftWall");
-//        leftWallObjects = leftWallCollider.getObjects();
-//
-//        rightWallCollider = (TiledMapTileLayer)map.getLayers().get("rightWall");
-//        rightWallObjects = rightWallCollider.getObjects();
-//
-//        ceilingCollider = (TiledMapTileLayer)map.getLayers().get("Ceiling");
-//        ceilingObjects = rightWallCollider.getObjects();
-//
-//        floorCollider = (TiledMapTileLayer)map.getLayers().get("Ground");
-//        floorObjects = floorCollider.getObjects();
 
     }
 
@@ -134,16 +136,17 @@ public class PlayState extends State{
 
     @Override
     public void render(SpriteBatch sb) {
-        debugRenderer.render(world, cam.combined);
-
+        sb.setProjectionMatrix(cam.combined);
         renderer.setView(cam);
         renderer.render();
-        sb.setProjectionMatrix(cam.combined);
         sb.begin();
-        sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,player.getWidth(), player.getHeight());
+        sb.draw(player.getTexture(),player.getPosition().x,
+                player.getPosition().y,player.getWidth()*State.PIXEL_TO_METER,
+                player.getHeight()*State.PIXEL_TO_METER);
         sb.end();
         controller.draw();
-
+        cam.update();
+        debugRenderer.render(world, cam.combined);
         world.step(1/60f, 6, 2);
     }
 
