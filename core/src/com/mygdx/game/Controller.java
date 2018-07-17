@@ -48,23 +48,17 @@ public class Controller {
         Atk.setPosition(MyGdxGame.WIDTH, 0);
         AtkBtnHitbox = new Circle(Atk.getX(), Atk.getY(), (Atk.getWidth()/2));
 
+        Table table = new Table();      // Table for controller
+        Table GameTable = new Table();  // Table for whole game
+        Table AtkTable = new Table();   // Table for right buttons
 
-        Table table = new Table();
-        Table GameTable = new Table();
-        Table AtkTable = new Table();
-        table.left().bottom();
-        AtkTable.right().bottom();
         GameTable.setWidth(MyGdxGame.WIDTH);
         GameTable.setHeight(MyGdxGame.HEIGHT/2);
-
-
-
 
         float arrows = 60;
 
         Image atkImg = new Image(new Texture("Attack_Btn.png"));
         atkImg.setSize(64, 64);
-
 
         Image upImg = new Image(new Texture("upArrow.png"));
         upImg.setSize(arrows, arrows);
@@ -113,13 +107,10 @@ public class Controller {
             }
         });
 
-        GameTable.row();
-        GameTable.add(table);
-        GameTable.add();
-        GameTable.add(AtkTable);
-        stage.addActor(GameTable);
-
         float padding = 5;
+        AtkTable.add(atkImg).size(atkImg.getWidth(), atkImg.getHeight()).pad(padding);
+        stage.addActor(AtkTable);
+
         table.add().pad(padding);
         table.add(upImg).size(upImg.getWidth(), upImg.getHeight()).pad(padding);
         table.add().pad(padding);
@@ -130,12 +121,17 @@ public class Controller {
         table.row();
         table.add().pad(padding);
         table.add().pad(padding);
-        stage.addActor(table);
 
+        GameTable.row();
+        GameTable.add(table);
+        GameTable.add().expand(); // Make middle column take up as much space as possible
+        GameTable.add(AtkTable);
+        stage.addActor(GameTable);
 
-        AtkTable.add(atkImg).size(atkImg.getWidth(), atkImg.getHeight()).pad(padding);
-        stage.addActor(AtkTable);
-
+        // Table debug lines
+        GameTable.setDebug(true);
+        table.setDebug(true);
+        AtkTable.setDebug(true);
     }
 
     public void draw() {

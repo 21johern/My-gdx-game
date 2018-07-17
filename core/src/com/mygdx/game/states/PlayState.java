@@ -1,6 +1,7 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -172,10 +173,12 @@ public class PlayState extends State{
         shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
         // Hitbox needs to be fixed.
 //        shapeRenderer.rect(224,230,220,200);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rect(0, 0, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
         shapeRenderer.end();
         controller.draw();
         cam.update();
-        debugRenderer.render(world, cam.combined);
+//        debugRenderer.render(world, cam.combined);
         world.step(1/60f, 6, 2);
     }
 
