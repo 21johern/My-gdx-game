@@ -3,45 +3,134 @@ package com.mygdx.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.utils.Timer;
+import com.mygdx.game.states.PlayState;
+import com.mygdx.game.states.State;
 
 public class EnemyM {
-    public Vector3 getPosition() {
-        return position;
-    }
 
     private Vector3 position;
-    private Vector3 velocity;
-    private Texture enemyM;
-    private Animation anim;
-    private static final int GRAVITY = -15;
+    private Texture EnemyWalk;
+    private Texture StabCharacter;
+    private Animation walk;
+    private Animation stab;
+    private String EnemyMActivity;
     private boolean faceRight;
+    public BodyDef EnemybodyDef;
+    public Body EnemyBody;
+    public FixtureDef EnemyFixtureDef;
+    public Vector2 vel;
 
-    public EnemyM(int x, int y){
-        position = new Vector3(x, y, 0);
-        velocity = new Vector3(0, 0, 0);
+    public PolygonShape polygon;
+    public int getWidth() {
+        return width;
+    }
+
+    private int width;
+
+    public int getHeight() {
+        return height;
+    }
+
+    private int height;
+
+    public EnemyM(float x, float y, PlayState playState){
+
+//Replace images once fixed.
+        StabCharacter = new Texture("Spritejump.png");
+        EnemyWalk = new Texture("walksprite.png");
+
+//Correct once information known.
+        walk = new Animation(new TextureRegion(EnemyWalk),4, 0.4f,2,2 );
+        stab = new Animation(new TextureRegion(StabCharacter),8, 1f,4,2 );
+
+        width = getTexture().getRegionWidth();
+        height = getTexture().getRegionHeight();
+
+        EnemybodyDef = new BodyDef();
+        EnemybodyDef.type = BodyDef.BodyType.DynamicBody;
+        EnemybodyDef.position.set(x, y);
+        EnemyBody = playState.world.createBody(EnemybodyDef);
+        polygon = new PolygonShape();
+        polygon.set(new float[] {0, 0,(getWidth() * State.PIXEL_TO_METER), 0,
+                (getWidth() * State.PIXEL_TO_METER), (getHeight() * State.PIXEL_TO_METER), 0, (getHeight() * State.PIXEL_TO_METER)});
+        EnemyFixtureDef = new FixtureDef();
+        EnemyFixtureDef.shape = polygon;
+        EnemyFixtureDef.density = 0.5f;
+        EnemyFixtureDef.friction = 0.4f;
+
+        EnemyBody.createFixture(EnemyFixtureDef);
+        position = new Vector3(EnemyBody.getPosition(), 0);
+        EnemyBody.setFixedRotation(true);
+        polygon.dispose();
+        vel = this.EnemyBody.getLinearVelocity();
+
+        EnemyMActivity = "none";
         faceRight = true;
-        enemyM = new Texture("EnemyM.png");
-        anim = new Animation(new TextureRegion(enemyM),6, 1f,3,3 );
     }
 
     public void update(float dt){
-        anim.update(dt);
-//        velocity.add(0, GRAVITY, 0);
-        velocity.scl(dt);
-        position.add(velocity.x, velocity.y, 0);
-        velocity.scl(1 / dt);
-        anim.update(dt);
-        if (velocity.x < 0) {
-            velocity.x += 1;
+        vel = this.EnemyBody.getLinearVelocity();
+        System.out.println(vel.x);
+        if (EnemyMActivity == "Walking") {
+            stab.pause();
+            walk.resume(dt);
         }
-        if (velocity.x > 0) {
-            velocity.x -= 1;
+        if (EnemyMActivity == "Jumping") {
+            walk.pause();
+            stab.resume(dt);
         }
-
+        position.set(EnemyBody.getPosition(), 0);
     }
+
+    public void walkLeft() {
+        EnemyMActivity = "Walking";
+        if (faceRight) {
+            walk.flipFrames();
+            stab.flipFrames();
+        }
+        faceRight = false;
+        EnemyBody.applyLinearImpulse(-.05f,0f,getPosition().x/2,getPosition().y/2,true);
+    }
+    public void walkRight() {
+        EnemyMActivity = "Walking";
+        if (!faceRight) {
+            walk.flipFrames();
+            stab.flipFrames();
+        }
+        faceRight = true;
+        EnemyBody.applyLinearImpulse(.05f,0f,getPosition().x/2,getPosition().y/2,true);
+    }
+    public void stab() {
+        EnemyMActivity = "Jumping";
+        EnemyBody.applyLinearImpulse(0f,.15f,getPosition().x/2,getPosition().y/2,true);
+
+        float delay = 1;
+        Timer.schedule(new Timer.Task(){
+            @Override
+            public void run() {
+                stab.pause();
+                EnemyMActivity = "Walking";
+            }
+        }, delay);
+    }
+
+
     public TextureRegion getTexture() {
-        return anim.getFrame();
+        if (EnemyMActivity == "Jumping"){
+            return stab.getFrame();
+        }
+        return walk.getFrame();
     }
 
+    public Vector3 getPosition() {
+        return position;
+    }
 }

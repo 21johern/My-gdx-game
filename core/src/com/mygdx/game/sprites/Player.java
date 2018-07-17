@@ -103,7 +103,7 @@ public class Player {
             jump.flipFrames();
         }
         faceRight = true;
-        playerBody.applyLinearImpulse(.15f,0f,getPosition().x/2,getPosition().y/2,true);
+        playerBody.applyLinearImpulse(.05f,0f,getPosition().x/2,getPosition().y/2,true);
     }
     public void jump() {
         Activity = "Jumping";
