@@ -7,10 +7,12 @@ import com.mygdx.game.MyGdxGame;
 
 public class MenuState extends State {
     Texture background;
+    private Texture playBtn;
 
     public MenuState(GameStateManager stateManager) {
         super(stateManager);
         background = new Texture("MenuMap.png");
+        playBtn = new Texture("playBtn.png");
     }
 
 
@@ -31,6 +33,7 @@ public class MenuState extends State {
     public void render(SpriteBatch sb) {
         sb.begin();
         sb.draw(background,0,0);
+        sb.draw(playBtn, (MyGdxGame.WIDTH / 2) - (playBtn.getWidth() / 2), MyGdxGame.HEIGHT / 2);
         sb.end();
     }
 

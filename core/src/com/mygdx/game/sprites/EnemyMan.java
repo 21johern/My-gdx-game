@@ -1,47 +1,32 @@
 package com.mygdx.game.sprites;
 
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
 
-public class EnemyM {
-
-    private Vector3 position;
-    private Texture EnemyWalk;
-    private Texture StabCharacter;
-    private Animation walk;
-    private Animation stab;
-    private String EnemyMActivity;
-    private boolean faceRight;
+public class EnemyMan extends Enemy {
     public BodyDef EnemybodyDef;
     public Body EnemyBody;
     public FixtureDef EnemyFixtureDef;
-    public Vector2 vel;
-
     public PolygonShape polygon;
     public int getWidth() {
         return width;
     }
-
-    private int width;
-
+    protected int width;
     public int getHeight() {
         return height;
     }
+    protected int height;
 
-    private int height;
-
-    public EnemyM(float x, float y, PlayState playState){
+    public EnemyMan (float x, float y, PlayState playState) {
+        super(x, y, playState);
 
 //Replace images once fixed.
         StabCharacter = new Texture("Spritejump.png");
@@ -72,8 +57,10 @@ public class EnemyM {
         polygon.dispose();
         vel = this.EnemyBody.getLinearVelocity();
 
-        EnemyMActivity = "none";
-        faceRight = true;
+
+
+
+
     }
 
     public void update(float dt){
@@ -88,6 +75,13 @@ public class EnemyM {
             stab.resume(dt);
         }
         position.set(EnemyBody.getPosition(), 0);
+    }
+
+    public TextureRegion getTexture() {
+        if (EnemyMActivity == "Jumping"){
+            return stab.getFrame();
+        }
+        return walk.getFrame();
     }
 
     public void walkLeft() {
@@ -120,17 +114,5 @@ public class EnemyM {
                 EnemyMActivity = "Walking";
             }
         }, delay);
-    }
-
-
-    public TextureRegion getTexture() {
-        if (EnemyMActivity == "Jumping"){
-            return stab.getFrame();
-        }
-        return walk.getFrame();
-    }
-
-    public Vector3 getPosition() {
-        return position;
     }
 }

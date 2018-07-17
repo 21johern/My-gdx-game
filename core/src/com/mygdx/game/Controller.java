@@ -129,9 +129,9 @@ public class Controller {
         stage.addActor(GameTable);
 
         // Table debug lines
-        GameTable.setDebug(true);
-        table.setDebug(true);
-        AtkTable.setDebug(true);
+//        GameTable.setDebug(true);
+//        table.setDebug(true);
+//        AtkTable.setDebug(true);
     }
 
     public void draw() {

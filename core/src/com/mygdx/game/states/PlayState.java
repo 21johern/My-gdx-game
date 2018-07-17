@@ -21,8 +21,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.sprites.EnemyM;
-import com.mygdx.game.sprites.EnemyS;
+import com.mygdx.game.sprites.EnemyMan;
+import com.mygdx.game.sprites.EnemyMushroom;
+import com.mygdx.game.sprites.EnemySkeleton;
 import com.mygdx.game.sprites.Player;
 
 public class PlayState extends State{
@@ -33,7 +34,10 @@ public class PlayState extends State{
     private TiledMap map;
     private Player player;
 
-    private EnemyM enemyM;
+    private EnemyMan enemyMan;
+    private EnemySkeleton enemySkeleton;
+    private EnemyMushroom enemyMushroom;
+
 
     private Controller controller;
     private ShapeRenderer shapeRenderer;
@@ -41,28 +45,6 @@ public class PlayState extends State{
     public BodyDef floorDef;
     public PolygonShape floorShape;
 
-    // Creates lava objects from map then fetches the ones specifically in the lava layer.
-//    public TiledMapTileLayer lavaCollider;
-//    public MapObjects lavaObjects;
-//
-//    public TiledMapTileLayer waterCollider;
-//    public MapObjects waterObjects;
-//
-//    public TiledMapTileLayer chestCollider;
-//    public MapObjects chestObjects;
-//
-//    public TiledMapTileLayer doorCollider;
-//    public MapObjects doorObjects;
-//
-//    public TiledMapTileLayer leftWallCollider;
-//    public MapObjects leftWallObjects;
-//
-//    public TiledMapTileLayer rightWallCollider;
-//    public MapObjects rightWallObjects;
-//
-//    public TiledMapTileLayer ceilingCollider;
-//    public MapObjects ceilingObjects;
-//
     public MapObjects floorObjects;
 
 
@@ -78,7 +60,9 @@ public class PlayState extends State{
         debugRenderer = new Box2DDebugRenderer();
 
         player = new Player(7, 10, this);
-        enemyM = new EnemyM(22,7,this);
+        enemyMan = new EnemyMan(22,7,this);
+        enemySkeleton = new EnemySkeleton(8, 5, this);
+        enemyMushroom = new EnemyMushroom(19,23/2,this);
 
         map = new TmxMapLoader().load("MenuMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, State.PIXEL_TO_METER);
@@ -105,20 +89,6 @@ public class PlayState extends State{
             floors.get(counter).createFixture(floorShape, 0.0f);
             counter++;
         }
-
-        // Gets Lava objects and draws polygons.
-//        lavaCollider = (TiledMapTileLayer)map.getLayers().get("Lava");
-//        lavaObjects = lavaCollider.getObjects();
-//
-//        waterCollider = (TiledMapTileLayer)map.getLayers().get("Water");
-//        waterObjects = waterCollider.getObjects();
-//
-//        chestCollider = (TiledMapTileLayer)map.getLayers().get("Chest");
-//        chestObjects = chestCollider.getObjects();
-//
-//        doorCollider = (TiledMapTileLayer)map.getLayers().get("Exit");
-//        doorObjects = doorCollider.getObjects();
-
 
     }
 
@@ -150,14 +120,15 @@ public class PlayState extends State{
         } else if (controller.isAtkPressed()) {
 
         } else if(controller.isLeftPressed()) {
-            player.walkLeft();
+            player.
+                    walkLeft();
         } else if(controller.isRightPressed()) {
             player.walkRight();
         }
         player.update(dt);
-        enemyM.update(dt);
-
-
+        enemyMan.update(dt);
+        enemySkeleton.update(dt);
+        enemyMushroom.update(dt);
     }
 
     @Override
@@ -167,18 +138,20 @@ public class PlayState extends State{
         renderer.render();
         sb.begin();
         sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyM.getTexture(),enemyM.getPosition().x,enemyM.getPosition().y,enemyM.getWidth() * State.PIXEL_TO_METER, enemyM.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemyMan.getTexture(),enemyMan.getPosition().x,enemyMan.getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
         sb.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
         // Hitbox needs to be fixed.
 //        shapeRenderer.rect(224,230,220,200);
-        shapeRenderer.setColor(Color.BLACK);
-        shapeRenderer.rect(0, 0, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
+//        shapeRenderer.setColor(Color.BLACK);
+//        shapeRenderer.rect(0, 0, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
         shapeRenderer.end();
         controller.draw();
         cam.update();
-//        debugRenderer.render(world, cam.combined);
+        debugRenderer.render(world, cam.combined);
         world.step(1/60f, 6, 2);
     }
 
