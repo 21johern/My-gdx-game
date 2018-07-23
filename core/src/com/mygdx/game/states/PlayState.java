@@ -52,7 +52,7 @@ public class PlayState extends State{
         super(stateManager);
 
         // Change image to the correct background once we have it
-        cam.setToOrtho(false, MyGdxGame.WIDTH*State.PIXEL_TO_METER, MyGdxGame.HEIGHT*State.PIXEL_TO_METER) ;
+        cam.setToOrtho(false, MyGdxGame.WIDTH*State.PIXEL_TO_METER  / 2, MyGdxGame.HEIGHT*State.PIXEL_TO_METER / 2) ;
 
         Box2D.init();
         // the y value here is the gravity
@@ -135,7 +135,7 @@ public class PlayState extends State{
         renderer.setView(cam);
         renderer.render();
         sb.begin();
-        sb.draw(player.getTexture(),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
         sb.draw(enemyMan.getTexture(),enemyMan.getPosition().x,enemyMan.getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
         sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
         sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
