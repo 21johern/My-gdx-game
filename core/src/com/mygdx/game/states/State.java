@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class State {
+    public static final float PIXEL_TO_METER = 1/32f;
     protected OrthographicCamera cam;
     protected Vector3 mouse;
     protected GameStateManager gsm;

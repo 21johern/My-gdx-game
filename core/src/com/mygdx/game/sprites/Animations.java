@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
  * Created by missionbit on 6/22/17.
  */
 
-public class Animation {
+public class Animations {
     private Array<TextureRegion> frames;
     private float maxFrameTime;
     private float currentFrameTime;
@@ -16,7 +16,7 @@ public class Animation {
 
 
 
-    public Animation(TextureRegion region, int frameCount, float cycleTime, int row, int col){
+    public Animations(TextureRegion region, int frameCount, float cycleTime, int row, int col){
         frames = new Array<TextureRegion>();
         int frameWidth = region.getRegionWidth() / col;
         int frameHeight = region.getRegionHeight()/ row;
