@@ -30,9 +30,10 @@ public class Controller {
 
 
     public Controller() {
+        batch = new SpriteBatch();
         cam = new OrthographicCamera();
         viewport = new FitViewport(MyGdxGame.WIDTH, MyGdxGame.HEIGHT, cam);
-        stage = new Stage(viewport, MyGdxGame.batch);
+        stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
 
         Atk = new Image(new Texture("Attack_Btn.png"));

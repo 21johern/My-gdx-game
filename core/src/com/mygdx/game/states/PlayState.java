@@ -1,14 +1,11 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -52,7 +49,7 @@ public class PlayState extends State{
         super(stateManager);
 
         // Change image to the correct background once we have it
-        cam.setToOrtho(false, MyGdxGame.WIDTH*State.PIXEL_TO_METER  / 2, MyGdxGame.HEIGHT*State.PIXEL_TO_METER / 2) ;
+        cam.setToOrtho(false, MyGdxGame.WIDTH*State.PIXEL_TO_METER / 2, MyGdxGame.HEIGHT*State.PIXEL_TO_METER / 2) ;
 
         Box2D.init();
         // the y value here is the gravity
@@ -99,12 +96,11 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
-        if (!(cam.position.x - MyGdxGame.WIDTH / 4 < 0)){
-                cam.position.set(player.getPosition());
-            if ((cam.position.x + MyGdxGame.WIDTH / 4 > 757))
-                cam.position.set(player.getPosition());
+        //if (!(cam.position.x - MyGdxGame.WIDTH / 4 < 0)){
+                cam.position.set(player.playerBody.getPosition(), 0);
+        //    if ((cam.position.x + MyGdxGame.WIDTH / 4 > 757))
+                cam.position.set(player.playerBody.getPosition(), 0);
 
-        }
         cam.update();
 
         if(player.getPosition().x < 0){
