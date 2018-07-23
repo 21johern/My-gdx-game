@@ -36,6 +36,7 @@ public class Player {
     public TextureRegion jumpRegion;
     public TextureRegion attackRegion;
     public TextureRegion region;
+    private boolean isAttacking, isJumping;
 
     public PolygonShape polygon;
     public int getWidth() {
@@ -108,9 +109,12 @@ public class Player {
         region = new TextureRegion();
 
         stateTime = 0;
-
-        width = getTexture().getRegionWidth();
-        height = getTexture().getRegionHeight();
+        Activity = "none";
+        LastActivity = "none";
+        isAttacking = false;
+        isJumping = false;
+        width = getTexture(Gdx.graphics.getDeltaTime()).getRegionWidth();
+        height = getTexture(Gdx.graphics.getDeltaTime()).getRegionHeight();
 
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -130,74 +134,83 @@ public class Player {
         polygon.dispose();
         vel = this.playerBody.getLinearVelocity();
 
-        Activity = "none";
-        faceRight = true;
 
+        faceRight = true;
 
     }
 
     public void update(float dt){
         flipFrames();
-        stateTime += Gdx.graphics.getDeltaTime();
 //        vel = this.playerBody.getLinearVelocity();
 //        System.out.println(vel.x);
         position.set(playerBody.getPosition(), 0);
-
-         if(Activity == "Jumping"){
-            Activity = "Jumping";
-            if (vel.y == 0) {
-                controller.upPressed = false;
+//         if(Activity.equals("Jumping")){
+//            Activity = "Jumping";
+//            if (vel.y == 0) {
+//                controller.upPressed = false;
+//            }
+//        } else{
+//            Activity = "Walking";
+//        }
+        System.out.println(playerBody.getLinearVelocity().y);
+        if (isAttacking) {
+            Activity = "Attacking";
+            if (attack.isAnimationFinished(stateTime)) {
+                isAttacking = false;
             }
-        } else{
+        } else if (isJumping) {
+            Activity = "Jumping";
+
+            if (playerBody.getLinearVelocity().y == 0) {
+                isJumping = false;
+            }
+        } else {
             Activity = "Walking";
         }
     }
 
     public void walkLeft() {
-        Activity = "Walking";
         playerBody.applyLinearImpulse(-.05f,0f,getPosition().x/2,getPosition().y/2,true);
+        isAttacking = false;
+        isJumping = false;
     }
     public void walkRight() {
-        Activity = "Walking";
         playerBody.applyLinearImpulse(.05f,0f,getPosition().x/2,getPosition().y/2,true);
+        isAttacking = false;
+        isJumping = false;
     }
     public void jump() {
-        Activity = "Jumping";
         playerBody.applyLinearImpulse(0f,.15f,getPosition().x/2,getPosition().y/2,true);
-
+        isAttacking = false;
+        isJumping = true;
     }
-
     public void attack() {
-        LastActivity = Activity;
-        Activity = "Attacking";
+        isAttacking = true;
+        isJumping = false;
 
-        if(attack.isAnimationFinished(stateTime)){
-            Activity = LastActivity;
-        }
     }
 
 
-    public TextureRegion getTexture() {
+    public TextureRegion getTexture(float dt) {
         walkRegion = walk.getKeyFrame(stateTime, true);
         jumpRegion = jump.getKeyFrame(stateTime,false);
         attackRegion = attack.getKeyFrame(stateTime,false);
-
         region = walkRegion;
-
-        if (Activity == "Walking") {
+        if (Activity.equals("Attacking")){
+            region = attackRegion;
+        } else if (Activity.equals("Jumping")) {
+            region = jumpRegion;
+        } else if (Activity.equals("Walking")) {
             region = walkRegion;
         }
-        else if (Activity == "Jumping") {
-            region = jumpRegion;
-        }
-        else if (Activity == "Attacking"){
-            region = attackRegion;
-        }
+
+        stateTime = LastActivity.equals(Activity) ? stateTime + dt : 0;
+        LastActivity = Activity;
         return region;
     }
 
     public void flipFrames(){
-
+    if (Activity == "Walking")
         if ((playerBody.getLinearVelocity().x < 0 && faceRight)) {
             flipAll(walk);
             flipAll(jump);
