@@ -2,12 +2,9 @@ package com.mygdx.game.sprites;
 
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
-
-import javax.swing.JOptionPane;
 
 public class Player {
 
@@ -20,6 +17,8 @@ public class Player {
     private String Activity;
     private static final int GRAVITY = -15;
     private boolean faceRight;
+    public float x;
+    public float y;
 
     public int getWidth() {
         return width;

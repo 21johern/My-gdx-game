@@ -24,9 +24,10 @@ public class Controller {
     OrthographicCamera cam;
 
     public Controller() {
+        batch = new SpriteBatch();
         cam = new OrthographicCamera();
         viewport = new FitViewport(MyGdxGame.WIDTH, MyGdxGame.HEIGHT, cam);
-        stage = new Stage(viewport, MyGdxGame.batch);
+        stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
 
         Table table = new Table();

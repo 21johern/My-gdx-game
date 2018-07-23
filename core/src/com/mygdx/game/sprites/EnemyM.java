@@ -12,10 +12,23 @@ public class EnemyM {
 
     private Vector3 position;
     private Vector3 velocity;
-    private Texture enemyM;
+    public Texture enemyM;
     private Animation anim;
     private static final int GRAVITY = -15;
     private boolean faceRight;
+
+    public int getWidth() {
+        return width;
+    }
+
+    private int width;
+
+    public int getHeight() {
+        return height;
+    }
+
+    private int height;
+
 
     public EnemyM(int x, int y){
         position = new Vector3(x, y, 0);
