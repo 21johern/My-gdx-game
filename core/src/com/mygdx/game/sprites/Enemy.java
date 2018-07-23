@@ -12,8 +12,8 @@ public class Enemy {
     protected Vector3 position;
     protected Texture EnemyWalk;
     protected Texture StabCharacter;
-    protected Animation walk;
-    protected Animation stab;
+    protected Animations walk;
+    protected Animations stab;
     protected String EnemyMActivity;
     protected boolean faceRight;
     public Vector2 vel;

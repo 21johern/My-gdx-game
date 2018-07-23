@@ -52,7 +52,7 @@ public class PlayState extends State{
         super(stateManager);
 
         // Change image to the correct background once we have it
-        cam.setToOrtho(false, MyGdxGame.WIDTH*State.PIXEL_TO_METER, MyGdxGame.HEIGHT*State.PIXEL_TO_METER);
+        cam.setToOrtho(false, MyGdxGame.WIDTH*State.PIXEL_TO_METER, MyGdxGame.HEIGHT*State.PIXEL_TO_METER) ;
 
         Box2D.init();
         // the y value here is the gravity
@@ -104,24 +104,22 @@ public class PlayState extends State{
             if ((cam.position.x + MyGdxGame.WIDTH / 4 > 757))
                 cam.position.set(player.getPosition());
 
-        } else {
-
         }
         cam.update();
-        System.out.println(player.getPosition().x);
+
         if(player.getPosition().x < 0){
             player.getPosition().x = 0;
         }
-        if(player.getPosition().x > 757){
+        else if(player.getPosition().x > 757){
             player.getPosition().x = 757;
         }
-        if(controller.isUpPressed()) {
-            player.jump();
-        } else if (controller.isAtkPressed()) {
 
+        if (controller.isAtkPressed()) {
+           player.attack();
+        }else if(controller.isUpPressed()) {
+            player.jump();
         } else if(controller.isLeftPressed()) {
-            player.
-                    walkLeft();
+            player.walkLeft();
         } else if(controller.isRightPressed()) {
             player.walkRight();
         }

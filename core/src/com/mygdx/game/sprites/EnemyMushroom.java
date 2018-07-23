@@ -29,12 +29,12 @@ public class EnemyMushroom extends Enemy {
         super(x, y, playState);
 
 //Replace images once fixed.
-        StabCharacter = new Texture("Spritejump.png");
-        EnemyWalk = new Texture("walksprite.png");
+        StabCharacter = new Texture("mushroomWalking.png");
+        EnemyWalk = new Texture("walkSprite.png");
 
 //Correct once information known.
-        walk = new Animation(new TextureRegion(EnemyWalk),4, 0.4f,2,2 );
-        stab = new Animation(new TextureRegion(StabCharacter),8, 1f,4,2 );
+        walk = new Animations(new TextureRegion(EnemyWalk),1, 1f,2,2 );
+        stab = new Animations(new TextureRegion(StabCharacter),4, 1f,4,2 );
 
         width = getTexture().getRegionWidth();
         height = getTexture().getRegionHeight();
@@ -65,7 +65,7 @@ public class EnemyMushroom extends Enemy {
 
     public void update(float dt){
         vel = this.EnemyBody.getLinearVelocity();
-        System.out.println(vel.x);
+//        System.out.println(vel.x);
         if (EnemyMActivity == "Walking") {
             stab.pause();
             walk.resume(dt);

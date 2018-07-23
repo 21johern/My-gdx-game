@@ -22,20 +22,11 @@ public class Controller {
     private SpriteBatch batch;
     Viewport viewport;
     Stage stage;
-    boolean upPressed, leftPressed, rightPressed;
     OrthographicCamera cam;
     private Image Atk;
-    private Circle AtkBtnHitbox;
-    private boolean AtkPressed;
+    public boolean AtkPressed, upPressed, leftPressed, rightPressed;
 
-    public boolean isAtkPressed() {
-        return AtkPressed;
-    }
 
-    class TouchInfo {
-        float touchX = 0;
-        float touchY = 0;
-    }
 
 
     public Controller() {
@@ -46,7 +37,6 @@ public class Controller {
 
         Atk = new Image(new Texture("Attack_Btn.png"));
         Atk.setPosition(MyGdxGame.WIDTH, 0);
-        AtkBtnHitbox = new Circle(Atk.getX(), Atk.getY(), (Atk.getWidth()/2));
 
         Table table = new Table();      // Table for controller
         Table GameTable = new Table();  // Table for whole game
@@ -59,6 +49,20 @@ public class Controller {
 
         Image atkImg = new Image(new Texture("Attack_Btn.png"));
         atkImg.setSize(64, 64);
+
+        atkImg.addListener(new InputListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                AtkPressed = true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                AtkPressed = false;
+            }
+        });
 
         Image upImg = new Image(new Texture("upArrow.png"));
         upImg.setSize(arrows, arrows);
@@ -150,47 +154,12 @@ public class Controller {
         return rightPressed;
     }
 
+    public boolean isAtkPressed() {
+        return AtkPressed;
+    }
+
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
-
-    public void drawDebug(ShapeRenderer sr) {
-        sr.circle(AtkBtnHitbox.x, AtkBtnHitbox.y, AtkBtnHitbox.radius);
-    }
-
-    private void checkCollisions(TouchInfo t) {
-        if (AtkBtnHitbox.contains(t.touchX, t.touchY)) {
-            AtkPressed = true;
-        }
-    }
-
-
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        AtkPressed = false;
-        return true;
-    }
-
-
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 touchPos = new Vector3(screenX, screenY, 0);
-        cam.unproject(touchPos);
-
-        if(AtkBtnHitbox.contains(touchPos.x,touchPos.y)){
-            AtkPressed = true;
-        }
-        return true;
-    }
-
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        Vector3 touchPos = new Vector3(screenX, screenY, 0);
-        cam.unproject(touchPos);
-
-        if(AtkBtnHitbox.contains(touchPos.x,touchPos.y)){
-            AtkPressed = true;
-        }
-        return true;
-    }
-
-    public boolean isAttackPressed() { return AtkPressed; }
 
 }
