@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -39,6 +40,7 @@ public class Player {
     private boolean isAttacking, isJumping;
 
     public PolygonShape polygon;
+    public Polygon AtkHitbox;
     public int getWidth() {
         return width;
     }
@@ -120,9 +122,15 @@ public class Player {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
         playerBody = playState.world.createBody(bodyDef);
+
         polygon = new PolygonShape();
-        polygon.set(new float[] {0, 0,(getWidth() * State.PIXEL_TO_METER), 0,
-                (getWidth() * State.PIXEL_TO_METER), (getHeight() * State.PIXEL_TO_METER), 0, (getHeight() * State.PIXEL_TO_METER)});
+        polygon.set(new float[] {((getWidth()/5) * State.PIXEL_TO_METER), 0,((getWidth()-2) * State.PIXEL_TO_METER), 0,
+                ((getWidth()-2) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER), ((getWidth()/5) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER)});
+
+        AtkHitbox = new Polygon();
+        AtkHitbox.setVertices(new float[] {(getWidth()/7 * State.PIXEL_TO_METER), (getHeight()/4 * State.PIXEL_TO_METER),(getWidth() * State.PIXEL_TO_METER), (getHeight()/4 * State.PIXEL_TO_METER),
+                (getWidth() * State.PIXEL_TO_METER), (getHeight() * State.PIXEL_TO_METER), (getWidth()/7 * State.PIXEL_TO_METER), (getHeight() * State.PIXEL_TO_METER)});
+
         fixtureDef = new FixtureDef();
         fixtureDef.shape = polygon;             
         fixtureDef.density = 0.5f;
@@ -140,19 +148,13 @@ public class Player {
     }
 
     public void update(float dt){
+
+
         flipFrames();
-//        vel = this.playerBody.getLinearVelocity();
-//        System.out.println(vel.x);
+
         position.set(playerBody.getPosition(), 0);
-//         if(Activity.equals("Jumping")){
-//            Activity = "Jumping";
-//            if (vel.y == 0) {
-//                controller.upPressed = false;
-//            }
-//        } else{
-//            Activity = "Walking";
-//        }
-        System.out.println(playerBody.getLinearVelocity().y);
+        AtkHitbox.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
+
         if (isAttacking) {
             Activity = "Attacking";
             if (attack.isAnimationFinished(stateTime)) {
