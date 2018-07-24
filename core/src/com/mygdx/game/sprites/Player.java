@@ -33,6 +33,7 @@ public class Player {
     public Body playerBody;
     public FixtureDef fixtureDef;
     public Vector2 vel;
+    public int health;
     public TextureRegion walkRegion;
     public TextureRegion jumpRegion;
     public TextureRegion attackRegion;
@@ -111,6 +112,7 @@ public class Player {
         region = new TextureRegion();
 
         stateTime = 0;
+        health = 2;
         Activity = "none";
         LastActivity = "none";
         isAttacking = false;
