@@ -1,6 +1,7 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObjects;
@@ -34,6 +35,9 @@ public class PlayState extends State{
     private EnemyMan enemyMan;
     private EnemySkeleton enemySkeleton;
     private EnemyMushroom enemyMushroom;
+    Music Swing;
+    Music Jump;
+    Music Background;
 
 
     private Controller controller;
@@ -60,6 +64,11 @@ public class PlayState extends State{
         enemyMan = new EnemyMan(22,7,this);
         enemySkeleton = new EnemySkeleton(8, 5, this);
         enemyMushroom = new EnemyMushroom(19,23/2,this);
+        Swing = Gdx.audio.newMusic(Gdx.files.internal("Swing1.mp3"));
+        Jump = Gdx.audio.newMusic(Gdx.files.internal("Jump.mp3"));
+        Background = Gdx.audio.newMusic(Gdx.files.internal("Background music.mp3"));
+
+
 
         map = new TmxMapLoader().load("MenuMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, State.PIXEL_TO_METER);
@@ -96,10 +105,15 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
-        //if (!(cam.position.x - MyGdxGame.WIDTH / 4 < 0)){
+      //  if (!(cam.position.x - MyGdxGame.WIDTH / 4 < 0)) {
+            cam.position.set(player.playerBody.getPosition(), 0);
+           // if ((cam.position.x + MyGdxGame.WIDTH / 4 > 757))
                 cam.position.set(player.playerBody.getPosition(), 0);
-        //    if ((cam.position.x + MyGdxGame.WIDTH / 4 > 757))
-                cam.position.set(player.playerBody.getPosition(), 0);
+                Background.setLooping(true);
+                Background.setVolume(.2f);
+                Background.play();
+
+
 
         cam.update();
 
@@ -112,8 +126,10 @@ public class PlayState extends State{
 
         if (controller.isAtkPressed()) {
            player.attack();
+           Swing.play();
         }else if(controller.isUpPressed()) {
             player.jump();
+            Jump.play();
         } else if(controller.isLeftPressed()) {
             player.walkLeft();
         } else if(controller.isRightPressed()) {
@@ -123,6 +139,7 @@ public class PlayState extends State{
         enemyMan.update(dt);
         enemySkeleton.update(dt);
         enemyMushroom.update(dt);
+
     }
 
     @Override
