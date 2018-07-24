@@ -135,12 +135,9 @@ public class PlayState extends State{
 
         cam.update();
 
-        if(player.getPosition().x < 0){
-            player.getPosition().x = 0;
-        }
-        else if(player.getPosition().x > 757){
-            player.getPosition().x = 757;
-        }
+        Background.play();
+        Background.setLooping(true);
+        Background.setVolume(.2f);
 
         if (controller.isAtkPressed()) {
            player.attack();
