@@ -50,6 +50,7 @@ public class EnemyMan extends Enemy {
     }
 
     public void update(float dt){
+        position.set(EnemyBody.getPosition(), 0);
         super.update(dt);
         vel = this.EnemyBody.getLinearVelocity();
 //        System.out.println(vel.x);
