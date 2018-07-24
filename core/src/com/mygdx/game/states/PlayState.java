@@ -61,9 +61,9 @@ public class PlayState extends State{
         debugRenderer = new Box2DDebugRenderer();
 
         player = new Player(7, 10, this);
-        enemyMan = new EnemyMan(22,7,this);
-        enemySkeleton = new EnemySkeleton(8, 5, this);
-        enemyMushroom = new EnemyMushroom(19,23/2,this);
+        enemyMan = new EnemyMan(22,7,this, player);
+        enemySkeleton = new EnemySkeleton(8, 5, this, player);
+        enemyMushroom = new EnemyMushroom(19,23/2,this, player);
         Swing = Gdx.audio.newMusic(Gdx.files.internal("Swing1.mp3"));
         Jump = Gdx.audio.newMusic(Gdx.files.internal("Jump.mp3"));
         Background = Gdx.audio.newMusic(Gdx.files.internal("Background music.mp3"));
