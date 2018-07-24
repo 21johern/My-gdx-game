@@ -96,19 +96,36 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
-        //if (!(cam.position.x - MyGdxGame.WIDTH / 4 < 0)){
-                cam.position.set(player.playerBody.getPosition(), 0);
-        //    if ((cam.position.x + MyGdxGame.WIDTH / 4 > 757))
-                cam.position.set(player.playerBody.getPosition(), 0);
+
+        if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
+                (player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
+            cam.position.set(200 * State.PIXEL_TO_METER,360 * State.PIXEL_TO_METER, 0);
+        } else if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
+                (player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
+            cam.position.set(200 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
+        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER)) &&
+                (player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
+            cam.position.set(600 * State.PIXEL_TO_METER,360 * State.PIXEL_TO_METER, 0);
+        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER)) &&
+                (player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
+            cam.position.set(600 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
+        } else if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER))) {
+            cam.position.set(200 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
+        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER))) {
+            cam.position.set(600 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
+        }
+        else if ((player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
+            cam.position.set(player.playerBody.getPosition().x,360 * State.PIXEL_TO_METER, 0);
+        }
+        else if ((player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
+            cam.position.set(player.playerBody.getPosition().x,120 * State.PIXEL_TO_METER, 0);
+        }
+        else{
+            cam.position.set(player.playerBody.getPosition(), 0);
+        }
 
         cam.update();
 
-        if(player.getPosition().x < 0){
-            player.getPosition().x = 0;
-        }
-        else if(player.getPosition().x > 757){
-            player.getPosition().x = 757;
-        }
 
         if (controller.isAtkPressed()) {
            player.attack();
@@ -136,13 +153,12 @@ public class PlayState extends State{
         sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
         sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
         sb.end();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
-        // Hitbox needs to be fixed.
-//        shapeRenderer.rect(224,230,220,200);
-//        shapeRenderer.setColor(Color.BLACK);
-//        shapeRenderer.rect(0, 0, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
+
+        shapeRenderer.setProjectionMatrix(cam.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.polygon(player.AtkHitbox.getTransformedVertices());
         shapeRenderer.end();
+
         controller.draw();
         cam.update();
         debugRenderer.render(world, cam.combined);
