@@ -13,7 +13,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public static final int HEIGHT = 480;
 	public static final String TITLE = "player";
 	private GameStateManager gsm;
-	SpriteBatch batch;
+	public SpriteBatch batch;
 	Texture img;
 
 	@Override
