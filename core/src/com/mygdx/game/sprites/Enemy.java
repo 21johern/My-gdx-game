@@ -14,6 +14,7 @@ import com.mygdx.game.states.State;
 
 
 public class Enemy {
+    protected Vector3 position;
     protected BodyDef EnemybodyDef;
     protected Body EnemyBody;
     protected Texture EnemyWalk;
@@ -33,7 +34,7 @@ public class Enemy {
         this.player = player;
         EnemyMActivity = "none";
         faceRight = true;
-
+        position = new Vector3(x, y, 0);
         EnemybodyDef = new BodyDef();
         EnemybodyDef.type = BodyDef.BodyType.DynamicBody;
         EnemybodyDef.position.set(x, y);
@@ -68,6 +69,10 @@ public class Enemy {
             // else, if enemy is right of player, move left
             EnemyBody.applyLinearImpulse(new Vector2(-.02f, 0), new Vector2(EnemyBody.getPosition().x, EnemyBody.getPosition().y), true);
         }
+    }
+
+    public Vector3 getPosition() {
+        return position;
     }
 
     public Body getBody() {
