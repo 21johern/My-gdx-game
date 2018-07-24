@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.sprites.Enemy;
 import com.mygdx.game.sprites.EnemyMan;
 import com.mygdx.game.sprites.EnemyMushroom;
 import com.mygdx.game.sprites.EnemySkeleton;
@@ -57,9 +58,9 @@ public class PlayState extends State{
         debugRenderer = new Box2DDebugRenderer();
 
         player = new Player(7, 10, this);
-        enemyMan = new EnemyMan(22,7,this);
-        enemySkeleton = new EnemySkeleton(8, 5, this);
-        enemyMushroom = new EnemyMushroom(19,23/2,this);
+        enemyMan = new EnemyMan(22,7,this, player);
+        enemySkeleton = new EnemySkeleton(8, 5, this, player);
+        enemyMushroom = new EnemyMushroom(19,23/2,this, player);
 
         map = new TmxMapLoader().load("MenuMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, State.PIXEL_TO_METER);
@@ -127,21 +128,19 @@ public class PlayState extends State{
 
     @Override
     public void render(SpriteBatch sb) {
+        shapeRenderer.setProjectionMatrix(cam.combined);
         sb.setProjectionMatrix(cam.combined);
         renderer.setView(cam);
         renderer.render();
         sb.begin();
         sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyMan.getTexture(),enemyMan.getPosition().x,enemyMan.getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemyMan.getTexture(),enemyMan.getBody().getPosition().x,enemyMan.getBody().getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
+//        sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
+//        sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
         sb.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
-        // Hitbox needs to be fixed.
-//        shapeRenderer.rect(224,230,220,200);
-//        shapeRenderer.setColor(Color.BLACK);
-//        shapeRenderer.rect(0, 0, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
+        //shapeRenderer.circle(enemyMan.getBody().getWorldCenter().x, enemyMan.getBody().getWorldCenter().y, enemyMan.detection.radius);
         shapeRenderer.end();
         controller.draw();
         cam.update();
