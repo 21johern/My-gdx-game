@@ -12,8 +12,6 @@ import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
 
 public class EnemyMushroom extends Enemy {
-    public BodyDef EnemybodyDef;
-    public Body EnemyBody;
     public FixtureDef EnemyFixtureDef;
     public PolygonShape polygon;
     public int getWidth() {
@@ -25,8 +23,8 @@ public class EnemyMushroom extends Enemy {
     }
     protected int height;
 
-    public EnemyMushroom (float x, float y, PlayState playState) {
-        super(x, y, playState);
+    public EnemyMushroom (float x, float y, PlayState playState, Player player) {
+        super(x, y, playState, player);
 
 //Replace images once fixed.
         StabCharacter = new Texture("mushroomWalking.png");
@@ -39,10 +37,6 @@ public class EnemyMushroom extends Enemy {
         width = getTexture().getRegionWidth();
         height = getTexture().getRegionHeight();
 
-        EnemybodyDef = new BodyDef();
-        EnemybodyDef.type = BodyDef.BodyType.DynamicBody;
-        EnemybodyDef.position.set(x, y);
-        EnemyBody = playState.world.createBody(EnemybodyDef);
         polygon = new PolygonShape();
         polygon.set(new float[] {0, 0,(getWidth() * State.PIXEL_TO_METER), 0,
                 (getWidth() * State.PIXEL_TO_METER), (getHeight() * State.PIXEL_TO_METER), 0, (getHeight() * State.PIXEL_TO_METER)});
@@ -52,8 +46,6 @@ public class EnemyMushroom extends Enemy {
         EnemyFixtureDef.friction = 0.4f;
 
         EnemyBody.createFixture(EnemyFixtureDef);
-        position = new Vector3(EnemyBody.getPosition(), 0);
-        EnemyBody.setFixedRotation(true);
         polygon.dispose();
         vel = this.EnemyBody.getLinearVelocity();
 
@@ -64,6 +56,7 @@ public class EnemyMushroom extends Enemy {
     }
 
     public void update(float dt){
+        super.update(dt);
         vel = this.EnemyBody.getLinearVelocity();
 //        System.out.println(vel.x);
         if (EnemyMActivity == "Walking") {
@@ -74,7 +67,6 @@ public class EnemyMushroom extends Enemy {
             walk.pause();
             stab.resume(dt);
         }
-        position.set(EnemyBody.getPosition(), 0);
     }
 
     public TextureRegion getTexture() {
@@ -91,7 +83,7 @@ public class EnemyMushroom extends Enemy {
             stab.flipFrames();
         }
         faceRight = false;
-        EnemyBody.applyLinearImpulse(-.05f,0f,getPosition().x/2,getPosition().y/2,true);
+        EnemyBody.applyLinearImpulse(-.05f,0f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
     }
     public void walkRight() {
         EnemyMActivity = "Walking";
@@ -100,11 +92,11 @@ public class EnemyMushroom extends Enemy {
             stab.flipFrames();
         }
         faceRight = true;
-        EnemyBody.applyLinearImpulse(.05f,0f,getPosition().x/2,getPosition().y/2,true);
+        EnemyBody.applyLinearImpulse(.05f,0f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
     }
     public void stab() {
         EnemyMActivity = "Jumping";
-        EnemyBody.applyLinearImpulse(0f,.15f,getPosition().x/2,getPosition().y/2,true);
+        EnemyBody.applyLinearImpulse(0f,.15f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
 
         float delay = 1;
         Timer.schedule(new Timer.Task(){

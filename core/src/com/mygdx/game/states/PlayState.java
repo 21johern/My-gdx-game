@@ -1,7 +1,6 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObjects;
@@ -19,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.sprites.Enemy;
 import com.mygdx.game.sprites.EnemyMan;
 import com.mygdx.game.sprites.EnemyMushroom;
 import com.mygdx.game.sprites.EnemySkeleton;
@@ -35,9 +35,6 @@ public class PlayState extends State{
     private EnemyMan enemyMan;
     private EnemySkeleton enemySkeleton;
     private EnemyMushroom enemyMushroom;
-    Music Swing;
-    Music Jump;
-    Music Background;
 
 
     private Controller controller;
@@ -61,14 +58,9 @@ public class PlayState extends State{
         debugRenderer = new Box2DDebugRenderer();
 
         player = new Player(7, 10, this);
-        enemyMan = new EnemyMan(22,7,this);
-        enemySkeleton = new EnemySkeleton(8, 5, this);
-        enemyMushroom = new EnemyMushroom(19,23/2,this);
-        Swing = Gdx.audio.newMusic(Gdx.files.internal("Swing1.mp3"));
-        Jump = Gdx.audio.newMusic(Gdx.files.internal("Jump.mp3"));
-        Background = Gdx.audio.newMusic(Gdx.files.internal("Background music.mp3"));
-
-
+        enemyMan = new EnemyMan(22,7,this, player);
+        enemySkeleton = new EnemySkeleton(8, 5, this, player);
+        enemyMushroom = new EnemyMushroom(19,23/2,this, player);
 
         map = new TmxMapLoader().load("MenuMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, State.PIXEL_TO_METER);
@@ -105,46 +97,24 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
-
-        if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
-                (player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
-            cam.position.set(200 * State.PIXEL_TO_METER,360 * State.PIXEL_TO_METER, 0);
-        } else if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
-                (player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
-            cam.position.set(200 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
-        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER)) &&
-                (player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
-            cam.position.set(600 * State.PIXEL_TO_METER,360 * State.PIXEL_TO_METER, 0);
-        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER)) &&
-                (player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
-            cam.position.set(600 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
-        } else if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER))) {
-            cam.position.set(200 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
-        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER))) {
-            cam.position.set(600 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
-        }
-        else if ((player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
-            cam.position.set(player.playerBody.getPosition().x,360 * State.PIXEL_TO_METER, 0);
-        }
-        else if ((player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
-            cam.position.set(player.playerBody.getPosition().x,120 * State.PIXEL_TO_METER, 0);
-        }
-        else{
-            cam.position.set(player.playerBody.getPosition(), 0);
-        }
+        //if (!(cam.position.x - MyGdxGame.WIDTH / 4 < 0)){
+                cam.position.set(player.playerBody.getPosition(), 0);
+        //    if ((cam.position.x + MyGdxGame.WIDTH / 4 > 757))
+                cam.position.set(player.playerBody.getPosition(), 0);
 
         cam.update();
 
-        Background.play();
-        Background.setLooping(true);
-        Background.setVolume(.2f);
+        if(player.getPosition().x < 0){
+            player.getPosition().x = 0;
+        }
+        else if(player.getPosition().x > 757){
+            player.getPosition().x = 757;
+        }
 
         if (controller.isAtkPressed()) {
            player.attack();
-           Swing.play();
         }else if(controller.isUpPressed()) {
             player.jump();
-            Jump.play();
         } else if(controller.isLeftPressed()) {
             player.walkLeft();
         } else if(controller.isRightPressed()) {
@@ -158,19 +128,19 @@ public class PlayState extends State{
 
     @Override
     public void render(SpriteBatch sb) {
+        shapeRenderer.setProjectionMatrix(cam.combined);
         sb.setProjectionMatrix(cam.combined);
         renderer.setView(cam);
         renderer.render();
         sb.begin();
         sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyMan.getTexture(),enemyMan.getPosition().x,enemyMan.getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemyMan.getTexture(),enemyMan.getBody().getPosition().x,enemyMan.getBody().getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemySkeleton.getTexture(),enemySkeleton.getBody().getPosition().x,enemySkeleton.getBody().getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemyMushroom.getTexture(),enemyMushroom.getBody().getPosition().x,enemyMushroom.getBody().getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
         sb.end();
-
-        shapeRenderer.setProjectionMatrix(cam.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.polygon(player.AtkHitbox.getTransformedVertices());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );
+        //shapeRenderer.circle(enemyMan.getBody().getWorldCenter().x, enemyMan.getBody().getWorldCenter().y, enemyMan.detection.radius);
         shapeRenderer.end();
         controller.draw();
         cam.update();
