@@ -178,7 +178,7 @@ public class PlayState extends State{
         enemySkeleton.update(dt);
         enemyMushroom.update(dt);
     }
-    
+
 //    public void lavaCheck(){
 //        for (){
 //            if(Intersector.overlapConvexPolygons(lavaObjects, player.))

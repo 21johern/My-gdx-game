@@ -132,7 +132,7 @@ public class Player {
 
         AtkHitbox = new Rectangle();
         AtkHitbox.set(((getWidth()/5) * State.PIXEL_TO_METER), ((getHeight()) * State.PIXEL_TO_METER),
-                ((getWidth()+2) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER));
+                ((getWidth()+4) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER));
 
         fixtureDef = new FixtureDef();
         fixtureDef.shape = polygon;             
