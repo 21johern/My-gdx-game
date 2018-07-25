@@ -105,6 +105,10 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
+        if(player.health <= 0) {
+            gsm.set(new DeathState(gsm));
+            dispose();
+        }
 
         if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
                 (player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
@@ -170,7 +174,7 @@ public class PlayState extends State{
 
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.polygon(player.AtkHitbox.getTransformedVertices());
+        shapeRenderer.rect(player.AtkHitbox.getX(),player.AtkHitbox.getY(),player.AtkHitbox.getWidth(),player.AtkHitbox.getHeight());
         shapeRenderer.end();
         controller.draw();
         cam.update();
@@ -180,6 +184,12 @@ public class PlayState extends State{
 
     @Override
     public void dispose() {
+        Swing.dispose();
+        Background.dispose();
+        Jump.dispose();
+        world.dispose();
+        map.dispose();
+        shapeRenderer.dispose();
 
     }
 }
