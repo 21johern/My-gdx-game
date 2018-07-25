@@ -30,11 +30,11 @@ public class EnemyMushroom extends Enemy {
 
 //Replace images once fixed.
         StabCharacter = new Texture("mushroomWalking.png");
-        EnemyWalk = new Texture("walkSprite.png");
+        EnemyWalk = new Texture("mushroomWalking.png");
 
 //Correct once information known.
-        walk = new Animations(new TextureRegion(EnemyWalk),1, 1f,2,2 );
-        stab = new Animations(new TextureRegion(StabCharacter),4, 1f,4,2 );
+        walk = new Animations(new TextureRegion(EnemyWalk),4, 1f,2,2 );
+        stab = new Animations(new TextureRegion(EnemyWalk),4, 1f,2,2 );
 
         width = getTexture().getRegionWidth();
         height = getTexture().getRegionHeight();
@@ -57,6 +57,7 @@ public class EnemyMushroom extends Enemy {
         polygon.dispose();
         vel = this.EnemyBody.getLinearVelocity();
 
+        EnemyMActivity = "Walking";
 
 
 
@@ -66,11 +67,11 @@ public class EnemyMushroom extends Enemy {
     public void update(float dt){
         vel = this.EnemyBody.getLinearVelocity();
 //        System.out.println(vel.x);
-        if (EnemyMActivity == "Walking") {
+        if (EnemyMActivity.equals("Walking")) {
             stab.pause();
             walk.resume(dt);
         }
-        if (EnemyMActivity == "Jumping") {
+        if (EnemyMActivity.equals("Jumping")) {
             walk.pause();
             stab.resume(dt);
         }
@@ -78,9 +79,10 @@ public class EnemyMushroom extends Enemy {
     }
 
     public TextureRegion getTexture() {
-        if (EnemyMActivity == "Jumping"){
+        if (EnemyMActivity.equals("Jumping")){
             return stab.getFrame();
         }
+
         return walk.getFrame();
     }
 

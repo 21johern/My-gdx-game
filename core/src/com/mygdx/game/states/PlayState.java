@@ -64,7 +64,7 @@ public class PlayState extends State{
         enemyMan = new EnemyMan(22,7,this);
         enemySkeleton = new EnemySkeleton(8, 5, this);
         enemyMushroom = new EnemyMushroom(19,23/2,this);
-        Swing = Gdx.audio.newMusic(Gdx.files.internal("Swing1.mp3"));
+        Swing = Gdx.audio.newMusic(Gdx.files.internal("Sword3.mp3"));
         Jump = Gdx.audio.newMusic(Gdx.files.internal("Jump.mp3"));
         Background = Gdx.audio.newMusic(Gdx.files.internal("Background music.mp3"));
 

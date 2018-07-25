@@ -30,11 +30,11 @@ public class EnemySkeleton extends Enemy {
 
 //Replace images once fixed.
         StabCharacter = new Texture("jumpSprite.png");
-        EnemyWalk = new Texture("walkSprite.png");
+        EnemyWalk = new Texture("skeletonWalking.png");
 
 //Correct once information known.
-        walk = new Animations(new TextureRegion(EnemyWalk),4, 0.4f,2,2 );
-        stab = new Animations(new TextureRegion(StabCharacter),8, 1f,4,2 );
+        walk = new Animations(new TextureRegion(EnemyWalk),4, 0.4f,3,2 );
+        stab = new Animations(new TextureRegion(StabCharacter),6, 1f,4,2 );
 
         width = getTexture().getRegionWidth();
         height = getTexture().getRegionHeight();
@@ -59,18 +59,18 @@ public class EnemySkeleton extends Enemy {
 
 
 
-
+        EnemyMActivity = "Walking";
 
     }
 
     public void update(float dt){
         vel = this.EnemyBody.getLinearVelocity();
 //        System.out.println(vel.x);
-        if (EnemyMActivity == "Walking") {
+        if (EnemyMActivity.equals("Walking")) {
             stab.pause();
             walk.resume(dt);
         }
-        if (EnemyMActivity == "Jumping") {
+        if (EnemyMActivity.equals("Jumping")) {
             walk.pause();
             stab.resume(dt);
         }
@@ -78,7 +78,7 @@ public class EnemySkeleton extends Enemy {
     }
 
     public TextureRegion getTexture() {
-        if (EnemyMActivity == "Jumping"){
+        if (EnemyMActivity.equals("Jumping")){
             return stab.getFrame();
         }
         return walk.getFrame();

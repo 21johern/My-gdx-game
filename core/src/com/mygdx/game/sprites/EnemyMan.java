@@ -30,7 +30,7 @@ public class EnemyMan extends Enemy {
 
 //Replace images once fixed.
         StabCharacter = new Texture("jumpSprite.png");
-        EnemyWalk = new Texture("walkSprite.png");
+        EnemyWalk = new Texture("enemyManWalking.png");
 
 //Correct once information known.
         walk = new Animations(new TextureRegion(EnemyWalk),4, 0.4f,2,2 );
@@ -57,6 +57,8 @@ public class EnemyMan extends Enemy {
         polygon.dispose();
         vel = this.EnemyBody.getLinearVelocity();
 
+        EnemyMActivity = "Walking";
+
 
 
 
@@ -66,11 +68,11 @@ public class EnemyMan extends Enemy {
     public void update(float dt){
         vel = this.EnemyBody.getLinearVelocity();
 //        System.out.println(vel.x);
-        if (EnemyMActivity == "Walking") {
+        if (EnemyMActivity.equals("Walking")) {
             stab.pause();
             walk.resume(dt);
         }
-        if (EnemyMActivity == "Jumping") {
+        if (EnemyMActivity.equals("Jumping")) {
             walk.pause();
             stab.resume(dt);
         }
@@ -78,7 +80,7 @@ public class EnemyMan extends Enemy {
     }
 
     public TextureRegion getTexture() {
-        if (EnemyMActivity == "Jumping"){
+        if (EnemyMActivity.equals("Jumping")){
             return stab.getFrame();
         }
         return walk.getFrame();
