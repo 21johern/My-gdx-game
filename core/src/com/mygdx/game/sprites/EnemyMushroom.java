@@ -13,7 +13,6 @@ import com.mygdx.game.states.State;
 
 public class EnemyMushroom extends Enemy {
     public FixtureDef EnemyFixtureDef;
-    public PolygonShape polygon;
     public int getWidth() {
         return width;
     }
@@ -28,7 +27,7 @@ public class EnemyMushroom extends Enemy {
 
 //Replace images once fixed.
         StabCharacter = new Texture("mushroomWalking.png");
-        EnemyWalk = new Texture("walkSprite.png");
+        EnemyWalk = new Texture("walksprite.png");
 
 //Correct once information known.
         walk = new Animations(new TextureRegion(EnemyWalk),1, 1f,2,2 );
@@ -37,7 +36,8 @@ public class EnemyMushroom extends Enemy {
         width = getTexture().getRegionWidth();
         height = getTexture().getRegionHeight();
 
-        polygon = new PolygonShape();
+        bounds.setVertices(new float[] {-1, -1,(getWidth() * State.PIXEL_TO_METER) + 1, -1,
+                (getWidth() * State.PIXEL_TO_METER) + 1, (getHeight() * State.PIXEL_TO_METER) + 1, -1, (getHeight() * State.PIXEL_TO_METER) + 1});
         polygon.set(new float[] {0, 0,(getWidth() * State.PIXEL_TO_METER), 0,
                 (getWidth() * State.PIXEL_TO_METER), (getHeight() * State.PIXEL_TO_METER), 0, (getHeight() * State.PIXEL_TO_METER)});
         EnemyFixtureDef = new FixtureDef();

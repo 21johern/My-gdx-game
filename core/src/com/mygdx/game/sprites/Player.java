@@ -38,9 +38,10 @@ public class Player {
     public TextureRegion attackRegion;
     public TextureRegion region;
     private boolean isAttacking, isJumping;
-
+    private final float MAX_VELOCITY = .01f;
     public PolygonShape polygon;
     public Polygon AtkHitbox;
+    public Polygon bounds;
     public int getWidth() {
         return width;
     }
@@ -57,7 +58,7 @@ public class Player {
         controller = new Controller();
 
         jumpCharacter = new Texture("jumpSprite.png");
-        walkCharacter = new Texture("walkSprite.png");
+        walkCharacter = new Texture("walksprite.png");
         attackCharacter = new Texture("attackSprite.png");
 
         TextureRegion[][] tmp1 = TextureRegion.split(walkCharacter, walkCharacter.getWidth() / 2, walkCharacter.getHeight() / 2);
@@ -124,8 +125,10 @@ public class Player {
         playerBody = playState.world.createBody(bodyDef);
 
         polygon = new PolygonShape();
-        polygon.set(new float[] {((getWidth()/5) * State.PIXEL_TO_METER), 0,((getWidth()-2) * State.PIXEL_TO_METER), 0,
+        bounds = new Polygon();
+        bounds.setVertices(new float[] {((getWidth()/5) * State.PIXEL_TO_METER), 0,((getWidth()-2) * State.PIXEL_TO_METER), 0,
                 ((getWidth()-2) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER), ((getWidth()/5) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER)});
+        polygon.set(bounds.getVertices());
 
         AtkHitbox = new Polygon();
         AtkHitbox.setVertices(new float[] {(getWidth()/7 * State.PIXEL_TO_METER), (getHeight()/4 * State.PIXEL_TO_METER),(getWidth() * State.PIXEL_TO_METER), (getHeight()/4 * State.PIXEL_TO_METER),
@@ -154,6 +157,7 @@ public class Player {
 
         position.set(playerBody.getPosition(), 0);
         AtkHitbox.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
+        bounds.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
 
         if (isAttacking) {
             Activity = "Attacking";
@@ -172,17 +176,23 @@ public class Player {
     }
 
     public void walkLeft() {
-        playerBody.applyLinearImpulse(-.05f,0f,getPosition().x/2,getPosition().y/2,true);
+        if(vel.x < MAX_VELOCITY) {
+            playerBody.applyLinearImpulse(-.015f, 0f, getPosition().x / 2, getPosition().y / 2, true);
+        }
         isAttacking = false;
         isJumping = false;
     }
     public void walkRight() {
-        playerBody.applyLinearImpulse(.05f,0f,getPosition().x/2,getPosition().y/2,true);
+        if(vel.x > -MAX_VELOCITY){
+            playerBody.applyLinearImpulse(.015f,0f,getPosition().x/2,getPosition().y/2,true);
+        }
         isAttacking = false;
         isJumping = false;
     }
     public void jump() {
-        playerBody.applyLinearImpulse(0f,.15f,getPosition().x/2,getPosition().y/2,true);
+        if(vel.y == 0) {
+            playerBody.applyLinearImpulse(0f, .55f, getPosition().x / 2, getPosition().y / 2, true);
+        }
         isAttacking = false;
         isJumping = true;
     }
