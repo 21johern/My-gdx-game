@@ -61,9 +61,9 @@ public class PlayState extends State{
         debugRenderer = new Box2DDebugRenderer();
 
         player = new Player(7, 10, this);
-        enemyMan = new EnemyMan(22,7,this);
-        enemySkeleton = new EnemySkeleton(8, 5, this);
-        enemyMushroom = new EnemyMushroom(19,23/2,this);
+        enemyMan = new EnemyMan(22,7,this, player);
+        enemySkeleton = new EnemySkeleton(8, 5, this, player);
+        enemyMushroom = new EnemyMushroom(19,23/2,this, player);
         Swing = Gdx.audio.newMusic(Gdx.files.internal("Sword3.mp3"));
         Jump = Gdx.audio.newMusic(Gdx.files.internal("Jump.mp3"));
         Background = Gdx.audio.newMusic(Gdx.files.internal("Background music.mp3"));
@@ -149,9 +149,9 @@ public class PlayState extends State{
         renderer.render();
         sb.begin();
         sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyMan.getTexture(),enemyMan.getPosition().x,enemyMan.getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemyMan.getTexture(),enemyMan.EnemyBody.getPosition().x,enemyMan.EnemyBody.getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemySkeleton.getTexture(),enemySkeleton.EnemyBody.getPosition().x,enemySkeleton.EnemyBody.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(enemyMushroom.getTexture(),enemyMushroom.EnemyBody.getPosition().x,enemyMushroom.EnemyBody.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
         sb.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(153/255f,95/255f,45/255f,1f );

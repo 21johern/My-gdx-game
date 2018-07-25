@@ -12,10 +12,11 @@ import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
 
 public class EnemyMan extends Enemy {
-    public BodyDef EnemybodyDef;
+    public BodyDef EnemyBodyDef;
     public Body EnemyBody;
     public FixtureDef EnemyFixtureDef;
     public PolygonShape polygon;
+    private Vector3 position;
     public int getWidth() {
         return width;
     }
@@ -25,8 +26,8 @@ public class EnemyMan extends Enemy {
     }
     protected int height;
 
-    public EnemyMan (float x, float y, PlayState playState) {
-        super(x, y, playState);
+    public EnemyMan (float x, float y, PlayState playState, Player player) {
+        super(x, y, playState, player);
 
 //Replace images once fixed.
         StabCharacter = new Texture("jumpSprite.png");
@@ -93,7 +94,7 @@ public class EnemyMan extends Enemy {
             stab.flipFrames();
         }
         faceRight = false;
-        EnemyBody.applyLinearImpulse(-.05f,0f,getPosition().x/2,getPosition().y/2,true);
+        EnemyBody.applyLinearImpulse(-.05f,0f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
     }
     public void walkRight() {
         EnemyMActivity = "Walking";
@@ -102,11 +103,11 @@ public class EnemyMan extends Enemy {
             stab.flipFrames();
         }
         faceRight = true;
-        EnemyBody.applyLinearImpulse(.05f,0f,getPosition().x/2,getPosition().y/2,true);
+        EnemyBody.applyLinearImpulse(.05f,0f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
     }
     public void stab() {
         EnemyMActivity = "Jumping";
-        EnemyBody.applyLinearImpulse(0f,.15f,getPosition().x/2,getPosition().y/2,true);
+        EnemyBody.applyLinearImpulse(0f,.15f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
 
         float delay = 1;
         Timer.schedule(new Timer.Task(){
