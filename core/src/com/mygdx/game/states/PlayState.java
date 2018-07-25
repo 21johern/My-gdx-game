@@ -48,9 +48,12 @@ public class PlayState extends State{
     public BodyDef floorDef;
     public PolygonShape floorShape;
     public MapObjects floorObjects;
+
     public MapObjects lavaObjects;
     public Array<Polygon> lava;
 
+    public MapObjects exitObjects;
+    public Array<Polygon> exit;
 
 
 
@@ -65,7 +68,7 @@ public class PlayState extends State{
         world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
 
-        player = new Player(7, 10, this);
+        player = new Player(21, 2, this);
         enemyMan = new EnemyMan(22,7,this, player);
         enemySkeleton = new EnemySkeleton(8, 5, this, player);
         enemyMushroom = new EnemyMushroom(19,23/2,this, player);
@@ -81,11 +84,17 @@ public class PlayState extends State{
         Gdx.app.log(TAG, "Application Listener Created");
         //mapObjects = .getLayers().get("Collision");
         controller = new Controller();
+        Gdx.input.setInputProcessor(controller);
 
         floorObjects = map.getLayers().get("Ground").getObjects();
-        lavaObjects = map.getLayers().get("Lava").getObjects();
 
+        lavaObjects = map.getLayers().get("Lava").getObjects();
         lava = new Array<Polygon>();
+
+        exitObjects = map.getLayers().get("Exit").getObjects();
+        exit = new Array<Polygon>();
+
+
 
         floors = new Array<Body>();
         floorDef = new BodyDef();
@@ -111,7 +120,20 @@ public class PlayState extends State{
             }
             Polygon temp = new Polygon();
             temp.setVertices(vertices);
+            temp.setPosition(obj.getPolygon().getX() * State.PIXEL_TO_METER, obj.getPolygon().getY() * State.PIXEL_TO_METER);
             lava.add(temp);
+            counter++;
+        }
+        counter = 0;
+        for (PolygonMapObject obj : exitObjects.getByType(PolygonMapObject.class)) {
+            float[] vertices = obj.getPolygon().getVertices();
+            for (int i = 0; i < vertices.length; i++) {
+                vertices[i] = vertices[i] * State.PIXEL_TO_METER;
+            }
+            Polygon temp = new Polygon();
+            temp.setVertices(vertices);
+            temp.setPosition(obj.getPolygon().getX() * State.PIXEL_TO_METER, obj.getPolygon().getY() * State.PIXEL_TO_METER);
+            exit.add(temp);
             counter++;
         }
 
@@ -124,6 +146,9 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
+        lavaCheck();
+        exitCheck();
+
         if(player.health <= 0) {
             gsm.set(new DeathState(gsm));
             dispose();
@@ -179,11 +204,21 @@ public class PlayState extends State{
         enemyMushroom.update(dt);
     }
 
-//    public void lavaCheck(){
-//        for (){
-//            if(Intersector.overlapConvexPolygons(lavaObjects, player.))
-//        }
-//    }
+    public void lavaCheck(){
+        for (Polygon deathLava : lava){
+            if(Intersector.overlapConvexPolygons(player.bounds, deathLava)){
+                player.health = 0;
+            }
+        }
+    }
+
+    public void exitCheck(){
+        for (Polygon deathLava : exit){
+            if(Intersector.overlapConvexPolygons(player.bounds, deathLava)){
+                player.health = 0;
+            }
+        }
+    }
 
     @Override
     public void render(SpriteBatch sb) {

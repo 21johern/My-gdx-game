@@ -146,7 +146,7 @@ public class Player {
         position = new Vector3(playerBody.getPosition(), 0);
         playerBody.setFixedRotation(true);
         vel = this.playerBody.getLinearVelocity();
-
+        bounds.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
 
         faceRight = true;
 

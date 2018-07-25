@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="32" tileheight="32" infinite="0" nextobjectid="485">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="32" tileheight="32" infinite="0" nextobjectid="486">
  <tileset firstgid="1" source="test.tsx"/>
  <tileset firstgid="1801" name="monsterboy_assets" tilewidth="32" tileheight="32" tilecount="1800" columns="40">
   <image source="monsterboy_assets.png" width="1280" height="1456"/>
@@ -23,7 +23,7 @@
 1222,1222,1222,1222,1222,1222,1136,1136,1136,1135,1764,1766,1693,1694,1695,1761,1762,1681,1732,1733,1735,1601,1736,1737,1738
 </data>
  </layer>
- <objectgroup name="Lava">
+ <objectgroup name="Lava" visible="0">
   <object id="446" x="0" y="352">
    <polygon points="0,0 96,0 96,64 0,64"/>
   </object>
@@ -73,12 +73,12 @@
    <polygon points="0,0 34,0 33,32 -1,32"/>
   </object>
  </objectgroup>
- <objectgroup name="Exit">
+ <objectgroup name="Exit" visible="0">
   <object id="50" x="672" y="480">
    <polygon points="0,0 32,0 32,-32 0,-32 0,0"/>
   </object>
  </objectgroup>
- <objectgroup name="Chest">
+ <objectgroup name="Chest" visible="0">
   <object id="51" x="769" y="1">
    <polygon points="0,0 -1,31 31,31 31,-1 -1,-1"/>
   </object>
@@ -329,6 +329,9 @@
   </object>
   <object id="484" x="96" y="288">
    <polygon points="0,0 96,0 96,32 0,32"/>
+  </object>
+  <object id="485" x="673" y="478">
+   <polygon points="0,0 33,-1 31,2 -1,2"/>
   </object>
  </objectgroup>
 </map>

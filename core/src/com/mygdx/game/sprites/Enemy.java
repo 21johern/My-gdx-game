@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
 
@@ -97,8 +98,15 @@ public class Enemy {
     private boolean attackPlayer(){
         // run anim
         if (Intersector.overlapConvexPolygons(bounds, player.bounds) && atkCount <= 0) {
-            System.out.println("dead");
+            player.health -= 1;
             atkCount = 60;
+            Timer.schedule(new Timer.Task(){
+                @Override
+                public void run() {
+                    stab.pause();
+                    EnemyMActivity = "Walking";
+                }
+            }, 1);
             return true;
         }
 
