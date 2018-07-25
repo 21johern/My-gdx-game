@@ -46,7 +46,6 @@ public class EnemySkeleton extends Enemy {
         EnemyFixtureDef.friction = 0.4f;
 
         EnemyBody.createFixture(EnemyFixtureDef);
-        polygon.dispose();
         vel = this.EnemyBody.getLinearVelocity();
 
 
@@ -107,5 +106,10 @@ public class EnemySkeleton extends Enemy {
                 EnemyMActivity = "Walking";
             }
         }, delay);
+    }
+
+    public void dispose(){
+        EnemyWalk.dispose();
+        StabCharacter.dispose();
     }
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -41,7 +42,7 @@ public class Player {
     private boolean isAttacking, isJumping;
 
     public PolygonShape polygon;
-    public Polygon AtkHitbox;
+    public Rectangle AtkHitbox;
     public int getWidth() {
         return width;
     }
@@ -129,9 +130,9 @@ public class Player {
         polygon.set(new float[] {((getWidth()/5) * State.PIXEL_TO_METER), 0,((getWidth()-2) * State.PIXEL_TO_METER), 0,
                 ((getWidth()-2) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER), ((getWidth()/5) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER)});
 
-        AtkHitbox = new Polygon();
-        AtkHitbox.setVertices(new float[] {(getWidth()/7 * State.PIXEL_TO_METER), (getHeight()/4 * State.PIXEL_TO_METER),(getWidth() * State.PIXEL_TO_METER), (getHeight()/4 * State.PIXEL_TO_METER),
-                (getWidth() * State.PIXEL_TO_METER), (getHeight() * State.PIXEL_TO_METER), (getWidth()/7 * State.PIXEL_TO_METER), (getHeight() * State.PIXEL_TO_METER)});
+        AtkHitbox = new Rectangle();
+        AtkHitbox.set(((getWidth()/5) * State.PIXEL_TO_METER), ((getHeight()) * State.PIXEL_TO_METER),
+                ((getWidth()+2) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER));
 
         fixtureDef = new FixtureDef();
         fixtureDef.shape = polygon;             
@@ -141,7 +142,6 @@ public class Player {
         playerBody.createFixture(fixtureDef);
         position = new Vector3(playerBody.getPosition(), 0);
         playerBody.setFixedRotation(true);
-        polygon.dispose();
         vel = this.playerBody.getLinearVelocity();
 
 
@@ -151,6 +151,9 @@ public class Player {
 
     public void update(float dt){
 
+        if(playerBody.getPosition().y <= 0){
+            health = 0;
+        }
 
         flipFrames();
 
@@ -238,5 +241,11 @@ public class Player {
 
     public Vector3 getPosition() {
         return position;
+    }
+
+    public void dispose() {
+        walkCharacter.dispose();
+        jumpCharacter.dispose();
+        attackCharacter.dispose();
     }
 }

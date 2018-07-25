@@ -190,6 +190,12 @@ public class PlayState extends State{
         world.dispose();
         map.dispose();
         shapeRenderer.dispose();
-
+        renderer.dispose();
+        debugRenderer.dispose();
+        floorShape.dispose();
+        player.dispose();
+        enemySkeleton.dispose();
+        enemyMan.dispose();
+        enemyMushroom.dispose();
     }
 }
