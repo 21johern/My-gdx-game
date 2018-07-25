@@ -9,6 +9,8 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -45,8 +47,11 @@ public class PlayState extends State{
     public Array<Body> floors;
     public BodyDef floorDef;
     public PolygonShape floorShape;
-
     public MapObjects floorObjects;
+    public MapObjects lavaObjects;
+    public Array<Polygon> lava;
+
+
 
 
     public PlayState(GameStateManager stateManager) {
@@ -78,6 +83,9 @@ public class PlayState extends State{
         controller = new Controller();
 
         floorObjects = map.getLayers().get("Ground").getObjects();
+        lavaObjects = map.getLayers().get("Lava").getObjects();
+
+        lava = new Array<Polygon>();
 
         floors = new Array<Body>();
         floorDef = new BodyDef();
@@ -93,6 +101,17 @@ public class PlayState extends State{
             }
             floorShape.set(vertices);
             floors.get(counter).createFixture(floorShape, 0.0f);
+            counter++;
+        }
+        counter = 0;
+        for (PolygonMapObject obj : lavaObjects.getByType(PolygonMapObject.class)) {
+            float[] vertices = obj.getPolygon().getVertices();
+            for (int i = 0; i < vertices.length; i++) {
+                vertices[i] = vertices[i] * State.PIXEL_TO_METER;
+            }
+            Polygon temp = new Polygon();
+            temp.setVertices(vertices);
+            lava.add(temp);
             counter++;
         }
 
@@ -159,6 +178,12 @@ public class PlayState extends State{
         enemySkeleton.update(dt);
         enemyMushroom.update(dt);
     }
+    
+//    public void lavaCheck(){
+//        for (){
+//            if(Intersector.overlapConvexPolygons(lavaObjects, player.))
+//        }
+//    }
 
     @Override
     public void render(SpriteBatch sb) {
