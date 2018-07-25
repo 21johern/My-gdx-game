@@ -9,6 +9,8 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -45,8 +47,11 @@ public class PlayState extends State{
     public Array<Body> floors;
     public BodyDef floorDef;
     public PolygonShape floorShape;
-
     public MapObjects floorObjects;
+    public MapObjects lavaObjects;
+    public Array<Polygon> lava;
+
+
 
 
     public PlayState(GameStateManager stateManager) {
@@ -78,6 +83,9 @@ public class PlayState extends State{
         controller = new Controller();
 
         floorObjects = map.getLayers().get("Ground").getObjects();
+        lavaObjects = map.getLayers().get("Lava").getObjects();
+
+        lava = new Array<Polygon>();
 
         floors = new Array<Body>();
         floorDef = new BodyDef();
@@ -95,6 +103,17 @@ public class PlayState extends State{
             floors.get(counter).createFixture(floorShape, 0.0f);
             counter++;
         }
+        counter = 0;
+        for (PolygonMapObject obj : lavaObjects.getByType(PolygonMapObject.class)) {
+            float[] vertices = obj.getPolygon().getVertices();
+            for (int i = 0; i < vertices.length; i++) {
+                vertices[i] = vertices[i] * State.PIXEL_TO_METER;
+            }
+            Polygon temp = new Polygon();
+            temp.setVertices(vertices);
+            lava.add(temp);
+            counter++;
+        }
 
     }
 
@@ -105,6 +124,10 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
+        if(player.health <= 0) {
+            gsm.set(new DeathState(gsm));
+            dispose();
+        }
 
         if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
                 (player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
@@ -156,6 +179,12 @@ public class PlayState extends State{
         enemyMushroom.update(dt);
     }
 
+//    public void lavaCheck(){
+//        for (){
+//            if(Intersector.overlapConvexPolygons(lavaObjects, player.))
+//        }
+//    }
+
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
@@ -170,7 +199,7 @@ public class PlayState extends State{
 
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.polygon(player.AtkHitbox.getTransformedVertices());
+        shapeRenderer.rect(player.AtkHitbox.getX(),player.AtkHitbox.getY(),player.AtkHitbox.getWidth(),player.AtkHitbox.getHeight());
         shapeRenderer.end();
         controller.draw();
         cam.update();
@@ -180,6 +209,18 @@ public class PlayState extends State{
 
     @Override
     public void dispose() {
-
+        Swing.dispose();
+        Background.dispose();
+        Jump.dispose();
+        world.dispose();
+        map.dispose();
+        shapeRenderer.dispose();
+        renderer.dispose();
+        debugRenderer.dispose();
+        floorShape.dispose();
+        player.dispose();
+        enemySkeleton.dispose();
+        enemyMan.dispose();
+        enemyMushroom.dispose();
     }
 }
