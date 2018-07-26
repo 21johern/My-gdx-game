@@ -56,8 +56,6 @@ public class EnemySkeleton extends Enemy {
         EnemybodyDef.type = BodyDef.BodyType.DynamicBody;
         EnemybodyDef.position.set(x, y);
         EnemyBody = world.createBody(EnemybodyDef);
-        detection.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 4);
-
 
         EnemyBody.setFixedRotation(true);
         vel = EnemyBody.getLinearVelocity();
@@ -89,8 +87,6 @@ public class EnemySkeleton extends Enemy {
 
         EnemyBody.createFixture(EnemyFixtureDef);
         vel = this.EnemyBody.getLinearVelocity();
-
-
 
 
 

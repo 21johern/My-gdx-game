@@ -184,21 +184,21 @@ public class Player {
 
     public void walkLeft() {
         if(vel.x < MAX_VELOCITY) {
-            playerBody.applyLinearImpulse(-.015f, 0f, getPosition().x / 2, getPosition().y / 2, true);
+            playerBody.applyLinearImpulse(-.1f, 0f, getPosition().x / 2, getPosition().y / 2, true);
         }
         isAttacking = false;
         isJumping = false;
     }
     public void walkRight() {
         if(vel.x > -MAX_VELOCITY){
-            playerBody.applyLinearImpulse(.015f,0f,getPosition().x/2,getPosition().y/2,true);
+            playerBody.applyLinearImpulse(.1f,0f,getPosition().x/2,getPosition().y/2,true);
         }
         isAttacking = false;
         isJumping = false;
     }
     public void jump() {
         if(vel.y == 0) {
-            playerBody.applyLinearImpulse(0f, .55f, getPosition().x / 2, getPosition().y / 2, true);
+            playerBody.applyLinearImpulse(0f, 2.5f, getPosition().x / 2, getPosition().y / 2, true);
         }
         isAttacking = false;
         isJumping = true;

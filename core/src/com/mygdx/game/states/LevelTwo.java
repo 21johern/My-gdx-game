@@ -178,6 +178,7 @@ public class LevelTwo extends State{
             player.jump();
             Jump.play();
         } else if(controller.isLeftPressed()) {
+            System.out.println("Hi");
             player.walkLeft();
         } else if(controller.isRightPressed()) {
             player.walkRight();
@@ -210,16 +211,16 @@ public class LevelTwo extends State{
         renderer.setView(cam);
         renderer.render();
         sb.begin();
-        sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,.75f, .75f);
         sb.end();
 
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.rect(player.AtkHitbox.getX(),player.AtkHitbox.getY(),player.AtkHitbox.getWidth(),player.AtkHitbox.getHeight());
+       // shapeRenderer.rect(player.AtkHitbox.getX(),player.AtkHitbox.getY(),player.AtkHitbox.getWidth(),player.AtkHitbox.getHeight());
         shapeRenderer.end();
         controller.draw();
         cam.update();
-        debugRenderer.render(world, cam.combined);
+//        debugRenderer.render(world, cam.combined);
         world.step(1/60f, 6, 2);
     }
 
@@ -232,7 +233,7 @@ public class LevelTwo extends State{
         map.dispose();
         shapeRenderer.dispose();
         renderer.dispose();
-        debugRenderer.dispose();
+//        debugRenderer.dispose();
         floorShape.dispose();
         player.dispose();
     }

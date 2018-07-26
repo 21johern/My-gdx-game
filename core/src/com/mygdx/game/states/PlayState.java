@@ -233,7 +233,7 @@ public class PlayState extends State{
         renderer.setView(cam);
         renderer.render();
         sb.begin();
-        sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
+        sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,1, 1);
         sb.draw(enemyMan.getTexture(),enemyMan.getPosition().x,enemyMan.getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
         sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
         sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
@@ -241,11 +241,11 @@ public class PlayState extends State{
 
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.rect(player.AtkHitbox.getX(),player.AtkHitbox.getY(),player.AtkHitbox.getWidth(),player.AtkHitbox.getHeight());
+    //    shapeRenderer.rect(player.AtkHitbox.getX(),player.AtkHitbox.getY(),player.AtkHitbox.getWidth(),player.AtkHitbox.getHeight());
         shapeRenderer.end();
         controller.draw();
         cam.update();
-        debugRenderer.render(world, cam.combined);
+//        debugRenderer.render(world, cam.combined);
         world.step(1/60f, 6, 2);
     }
 
@@ -258,7 +258,7 @@ public class PlayState extends State{
         map.dispose();
         shapeRenderer.dispose();
         renderer.dispose();
-        debugRenderer.dispose();
+//        debugRenderer.dispose();
         floorShape.dispose();
         player.dispose();
         enemySkeleton.dispose();
