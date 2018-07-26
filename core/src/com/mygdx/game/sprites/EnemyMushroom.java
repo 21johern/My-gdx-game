@@ -2,6 +2,8 @@ package com.mygdx.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -36,6 +38,8 @@ public class EnemyMushroom extends Enemy {
 
         width = getTexture().getRegionWidth();
         height = getTexture().getRegionHeight();
+        detection.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 4);
+
 
         bounds.setVertices(new float[] {-1, -1,(getWidth() * State.PIXEL_TO_METER) + 1, -1,
                 (getWidth() * State.PIXEL_TO_METER) + 1, (getHeight() * State.PIXEL_TO_METER) + 1, -1, (getHeight() * State.PIXEL_TO_METER) + 1});
@@ -49,15 +53,20 @@ public class EnemyMushroom extends Enemy {
         EnemyBody.createFixture(EnemyFixtureDef);
         vel = this.EnemyBody.getLinearVelocity();
 
-
-
-
-
     }
 
     public void update(float dt){
         position.set(EnemyBody.getPosition(), 0);
-        super.update(dt);
+        bounds.setPosition(EnemyBody.getPosition().x, EnemyBody.getPosition().y);
+        attackRange.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 1);
+        detection.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 4);
+        atkCount -= 1;
+        if (isDetected()) {
+            followPlayer();
+        }
+        if (isInAttackRange()) {
+            attackPlayer();
+        }
         vel = this.EnemyBody.getLinearVelocity();
 //        System.out.println(vel.x);
         if (EnemyMActivity == "Walking") {
@@ -109,6 +118,50 @@ public class EnemyMushroom extends Enemy {
         }, delay);
 
     }
+
+    private void followPlayer() {
+        // if enemy is left of player, move right
+        if (EnemyBody.getPosition().x < player.getPosition().x) {
+            walkRight();
+        } else if (EnemyBody.getPosition().x > player.getPosition().x){
+            // else, if enemy is right of player, move left
+            walkLeft();
+
+        }
+    }
+    private boolean attackPlayer(){
+        // run anim
+        if (Intersector.overlapConvexPolygons(bounds, player.bounds) && atkCount <= 0) {
+            player.health -= 1;
+            atkCount = 60;
+            Timer.schedule(new Timer.Task(){
+                @Override
+                public void run() {
+                    stab.pause();
+                    EnemyMActivity = "Walking";
+                }
+            }, 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isDetected() {
+        // if circle of detection contains player's center, return true
+        if (detection.contains(player.playerBody.getWorldCenter())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isInAttackRange() {
+        if(attackRange.contains(player.playerBody.getWorldCenter())){
+            return true;
+        }
+        return false;
+    }
+
     public void dispose(){
         EnemyWalk.dispose();
         StabCharacter.dispose();

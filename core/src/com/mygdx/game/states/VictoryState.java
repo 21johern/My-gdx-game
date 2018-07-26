@@ -10,7 +10,7 @@ public class VictoryState extends State {
 
     public VictoryState(GameStateManager stateManager) {
         super(stateManager);
-        background = new Texture("pixil-frame-1.png");
+        background = new Texture("pixil-layer-Background.png");
         cam.setToOrtho(false, MyGdxGame.WIDTH, MyGdxGame.HEIGHT);
     }
 

@@ -53,65 +53,12 @@ public class Enemy {
         attackRange = new Circle();
         attackRange.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 2);
         detection = new Circle();
-        detection.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 4);
-
         atkCount = 0;
     }
 
-    public void update(float dt) {
-        bounds.setPosition(EnemyBody.getPosition().x, EnemyBody.getPosition().y);
-        attackRange.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 2);
-        detection.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 4);
-        atkCount -= 1;
-        if (isDetected()) {
-            followPlayer();
-        }
-        if (isInAttackRange()) {
-            attackPlayer();
-        }
-    }
 
-    private boolean isDetected() {
-        // if circle of detection contains player's center, return true
-        if (detection.contains(player.playerBody.getWorldCenter())) {
-            return true;
-        }
-        return false;
-    }
 
-    private boolean isInAttackRange() {
-        if(attackRange.contains(player.playerBody.getWorldCenter())){
-            return true;
-        }
-        return false;
-    }
 
-    private void followPlayer() {
-        // if enemy is left of player, move right
-        if (EnemyBody.getPosition().x < player.getPosition().x) {
-            EnemyBody.applyLinearImpulse(new Vector2(.02f, 0), new Vector2(EnemyBody.getPosition().x, EnemyBody.getPosition().y), true);
-        } else if (EnemyBody.getPosition().x > player.getPosition().x){
-            // else, if enemy is right of player, move left
-            EnemyBody.applyLinearImpulse(new Vector2(-.02f, 0), new Vector2(EnemyBody.getPosition().x, EnemyBody.getPosition().y), true);
-        }
-    }
-    private boolean attackPlayer(){
-        // run anim
-        if (Intersector.overlapConvexPolygons(bounds, player.bounds) && atkCount <= 0) {
-            player.health -= 1;
-            atkCount = 60;
-            Timer.schedule(new Timer.Task(){
-                @Override
-                public void run() {
-                    stab.pause();
-                    EnemyMActivity = "Walking";
-                }
-            }, 1);
-            return true;
-        }
-
-        return false;
-    }
     public Vector3 getPosition() {
         return position;
     }

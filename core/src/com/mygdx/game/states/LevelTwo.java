@@ -199,7 +199,7 @@ public class LevelTwo extends State{
 
     public void exitCheck(){
         if((player.bounds.getX()<= 2 && player.bounds.getX()>= 1) && (player.bounds.getY()<= 4 && player.bounds.getY()>= 3)){
-            gsm.set(new BossLevel(gsm));
+            gsm.set(new PlayState(gsm));
             dispose();
         }
     }

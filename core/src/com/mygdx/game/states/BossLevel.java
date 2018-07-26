@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Controller;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.sprites.EnemyMan;
+import com.mygdx.game.sprites.Boss;
 import com.mygdx.game.sprites.EnemyMushroom;
 import com.mygdx.game.sprites.EnemySkeleton;
 import com.mygdx.game.sprites.Player;
@@ -35,6 +35,7 @@ public class BossLevel extends State{
     OrthogonalTiledMapRenderer renderer;
     private TiledMap map;
     private Player player;
+    private Boss boss;
 
     Music Swing;
     Music Jump;
@@ -67,7 +68,8 @@ public class BossLevel extends State{
         world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
 
-        player = new Player(3, 4, world);
+        player = new Player(41, 6F, world);
+        boss = new Boss(45, 2, world, player);
         Swing = Gdx.audio.newMusic(Gdx.files.internal("Swing1.mp3"));
         Jump = Gdx.audio.newMusic(Gdx.files.internal("Jump.mp3"));
         Background = Gdx.audio.newMusic(Gdx.files.internal("Background music.mp3"));
@@ -130,6 +132,8 @@ public class BossLevel extends State{
 
     @Override
     public void update(float dt) {
+        boss.update(dt);
+        System.out.println(boss.health);
         lavaCheck();
         exitCheck();
 
@@ -144,16 +148,16 @@ public class BossLevel extends State{
         } else if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
                 (player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
             cam.position.set(200 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
-        } else if ((player.playerBody.getPosition().x >= (1568 * State.PIXEL_TO_METER)) &&
+        } else if ((player.playerBody.getPosition().x >= (1400 * State.PIXEL_TO_METER)) &&
                 (player.playerBody.getPosition().y >= (288 * State.PIXEL_TO_METER))) {
-            cam.position.set(1568 * State.PIXEL_TO_METER,288 * State.PIXEL_TO_METER, 0);
-        } else if ((player.playerBody.getPosition().x >= (1568 * State.PIXEL_TO_METER)) &&
+            cam.position.set(1400 * State.PIXEL_TO_METER,288 * State.PIXEL_TO_METER, 0);
+        } else if ((player.playerBody.getPosition().x >= (1400 * State.PIXEL_TO_METER)) &&
                 (player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
-            cam.position.set(1568 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
+            cam.position.set(1400 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
         } else if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER))) {
             cam.position.set(200 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
-        } else if ((player.playerBody.getPosition().x >= (1568 * State.PIXEL_TO_METER))) {
-            cam.position.set(1568 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
+        } else if ((player.playerBody.getPosition().x >= (1400 * State.PIXEL_TO_METER))) {
+            cam.position.set(1400 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
         }
         else if ((player.playerBody.getPosition().y >= (288 * State.PIXEL_TO_METER))) {
             cam.position.set(player.playerBody.getPosition().x,288 * State.PIXEL_TO_METER, 0);
@@ -198,7 +202,7 @@ public class BossLevel extends State{
     }
 
     public void exitCheck(){
-        if((player.bounds.getX()<= 22 && player.bounds.getX()>= 21) && (player.bounds.getY()<= 1 && player.bounds.getY()>= 0)){
+        if(boss.health <=0 ){
             gsm.set(new VictoryState(gsm));
             dispose();
         }
@@ -210,6 +214,7 @@ public class BossLevel extends State{
         renderer.setView(cam);
         renderer.render();
         sb.begin();
+        sb.draw(boss.getTexture(),boss.getPosition().x,boss.getPosition().y,boss.getWidth() * State.PIXEL_TO_METER, boss.getHeight() * State.PIXEL_TO_METER);
         sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
         sb.end();
 

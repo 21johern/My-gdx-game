@@ -14,27 +14,33 @@ import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
 
-public class EnemyMan extends Enemy {
+public class Boss extends Enemy {
     public FixtureDef EnemyFixtureDef;
     public int getWidth() {
         return width;
     }
     protected int width;
+    public int health;
     public int getHeight() {
         return height;
     }
     protected int height;
 
-    public EnemyMan (float x, float y, World world, Player player) {
+    public Boss (float x, float y, World world, Player player) {
         super(x, y, world, player);
+        health = 4;
+        EnemyMActivity = "Attacking";
 
 //Replace images once fixed.
-        StabCharacter = new Texture("jumpSprite.png");
-        EnemyWalk = new Texture("walksprite.png");
+        StabCharacter = new Texture("Boss Jump (1).png");
+        EnemyWalk = new Texture("Boss - Walking.png");
 
 //Correct once information known.
         walk = new Animations(new TextureRegion(EnemyWalk),4, 0.4f,2,2 );
         stab = new Animations(new TextureRegion(StabCharacter),8, 1f,4,2 );
+
+        detection.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 12);
+
 
         width = getTexture().getRegionWidth();
         height = getTexture().getRegionHeight();
@@ -48,14 +54,17 @@ public class EnemyMan extends Enemy {
         EnemyFixtureDef.friction = 0.4f;
 
         EnemyBody.createFixture(EnemyFixtureDef);
+        vel = this.EnemyBody.getLinearVelocity();
+
+
+
+
+
     }
 
     public void update(float dt){
-
-        detection.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 4);
-
-
         position.set(EnemyBody.getPosition(), 0);
+        vel = this.EnemyBody.getLinearVelocity();
         bounds.setPosition(EnemyBody.getPosition().x, EnemyBody.getPosition().y);
         attackRange.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 1);
         detection.set(EnemyBody.getPosition().x, EnemyBody.getPosition().y, 4);
@@ -66,7 +75,6 @@ public class EnemyMan extends Enemy {
         if (isInAttackRange()) {
             attackPlayer();
         }
-        vel = this.EnemyBody.getLinearVelocity();
 //        System.out.println(vel.x);
         if (EnemyMActivity == "Walking") {
             stab.pause();
@@ -76,7 +84,6 @@ public class EnemyMan extends Enemy {
             walk.pause();
             stab.resume(dt);
         }
-        //position.set(EnemyBody.getPosition(), 0);
     }
 
     public TextureRegion getTexture() {
@@ -93,7 +100,7 @@ public class EnemyMan extends Enemy {
             stab.flipFrames();
         }
         faceRight = false;
-        EnemyBody.applyLinearImpulse(-.05f,0f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
+        EnemyBody.applyLinearImpulse(-10000000f,7000000f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
     }
     public void walkRight() {
         EnemyMActivity = "Walking";
@@ -102,7 +109,7 @@ public class EnemyMan extends Enemy {
             stab.flipFrames();
         }
         faceRight = true;
-        EnemyBody.applyLinearImpulse(.05f,0f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
+        EnemyBody.applyLinearImpulse(10000000f,7000000f,EnemyBody.getPosition().x/2,EnemyBody.getPosition().y/2,true);
     }
     public void stab() {
         EnemyMActivity = "Jumping";
@@ -117,7 +124,6 @@ public class EnemyMan extends Enemy {
             }
         }, delay);
     }
-
     private void followPlayer() {
         // if enemy is left of player, move right
         if (EnemyBody.getPosition().x < player.getPosition().x) {

@@ -222,7 +222,7 @@ public class PlayState extends State{
 
     public void exitCheck(){
         if((player.bounds.getX() <= 22) && (player.bounds.getX() >= 21) && (player.bounds.getY() <= 1) && (player.bounds.getX() >= 0)){
-            gsm.set(new LevelTwo(gsm));
+            gsm.set(new VictoryState(gsm));
             dispose();
         }
     }

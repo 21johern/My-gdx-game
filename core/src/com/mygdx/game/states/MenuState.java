@@ -26,7 +26,7 @@ public class MenuState extends State {
 
     @Override
     protected void handleInput() {
-        gsm.set(new PlayState(gsm));
+        gsm.set(new LevelTwo(gsm));
         dispose();
     }
 
