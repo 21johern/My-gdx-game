@@ -12,14 +12,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Controller;
+import com.mygdx.game.states.BossLevel;
 import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
 
-public class Player {
+public class LevelTwoPlayer {
 
     private Vector3 position;
     private Texture walkCharacter, jumpCharacter, attackCharacter;
@@ -32,7 +32,7 @@ public class Player {
     private String Activity, LastActivity;
     private boolean faceRight;
     public BodyDef bodyDef;
-    public Body playerBody;
+    public Body player2Body;
     public FixtureDef fixtureDef;
     public Vector2 vel;
     public int health;
@@ -54,11 +54,10 @@ public class Player {
     public int getHeight() {
         return height;
     }
-    private int height;
-    World world;
 
-    public Player(float x, float y, World world){
-        this.world = world;
+    private int height;
+
+    public LevelTwoPlayer(float x, float y, PlayState LevelTwo){
         controller = new Controller();
 
         jumpCharacter = new Texture("jumpSprite.png");
@@ -127,7 +126,7 @@ public class Player {
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
-        playerBody = world.createBody(bodyDef);
+        player2Body = LevelTwo.world.createBody(bodyDef);
 
         polygon = new PolygonShape();
         bounds = new Polygon();
@@ -140,15 +139,15 @@ public class Player {
                 ((getWidth()+4) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER));
 
         fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygon;             
+        fixtureDef.shape = polygon;
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 0.4f;
 
-        playerBody.createFixture(fixtureDef);
-        position = new Vector3(playerBody.getPosition(), 0);
-        playerBody.setFixedRotation(true);
-        vel = this.playerBody.getLinearVelocity();
-        bounds.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
+        player2Body.createFixture(fixtureDef);
+        position = new Vector3(player2Body.getPosition(), 0);
+        player2Body.setFixedRotation(true);
+        vel = this.player2Body.getLinearVelocity();
+        bounds.setPosition(player2Body.getPosition().x, player2Body.getPosition().y);
 
         faceRight = true;
 
@@ -156,15 +155,15 @@ public class Player {
 
     public void update(float dt){
 
-        if(playerBody.getPosition().y <= 0){
+        if(player2Body.getPosition().y <= 0){
             health = 0;
         }
 
         flipFrames();
 
-        position.set(playerBody.getPosition(), 0);
-        AtkHitbox.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
-        bounds.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
+        position.set(player2Body.getPosition(), 0);
+        AtkHitbox.setPosition(player2Body.getPosition().x, player2Body.getPosition().y);
+        bounds.setPosition(player2Body.getPosition().x, player2Body.getPosition().y);
 
         if (isAttacking) {
             Activity = "Attacking";
@@ -174,7 +173,7 @@ public class Player {
         } else if (isJumping) {
             Activity = "Jumping";
 
-            if (playerBody.getLinearVelocity().y == 0) {
+            if (player2Body.getLinearVelocity().y == 0) {
                 isJumping = false;
             }
         } else {
@@ -184,21 +183,21 @@ public class Player {
 
     public void walkLeft() {
         if(vel.x < MAX_VELOCITY) {
-            playerBody.applyLinearImpulse(-.015f, 0f, getPosition().x / 2, getPosition().y / 2, true);
+            player2Body.applyLinearImpulse(-.015f, 0f, getPosition().x / 2, getPosition().y / 2, true);
         }
         isAttacking = false;
         isJumping = false;
     }
     public void walkRight() {
         if(vel.x > -MAX_VELOCITY){
-            playerBody.applyLinearImpulse(.015f,0f,getPosition().x/2,getPosition().y/2,true);
+            player2Body.applyLinearImpulse(.015f,0f,getPosition().x/2,getPosition().y/2,true);
         }
         isAttacking = false;
         isJumping = false;
     }
     public void jump() {
         if(vel.y == 0) {
-            playerBody.applyLinearImpulse(0f, .55f, getPosition().x / 2, getPosition().y / 2, true);
+            player2Body.applyLinearImpulse(0f, .55f, getPosition().x / 2, getPosition().y / 2, true);
         }
         isAttacking = false;
         isJumping = true;
@@ -229,17 +228,18 @@ public class Player {
     }
 
     public void flipFrames(){
-    if (Activity == "Walking")
-        if ((playerBody.getLinearVelocity().x < 0 && faceRight)) {
-            flipAll(walk);
-            flipAll(jump);
-            flipAll(attack);
-            faceRight = false;
-        } else if ((playerBody.getLinearVelocity().x > 0 && !faceRight)) {
-            flipAll(walk);
-            flipAll(jump);
-            flipAll(attack);
-            faceRight = true;
+        if (Activity.equals("Walking")) {
+            if ((player2Body.getLinearVelocity().x < 0 && faceRight)) {
+                flipAll(walk);
+                flipAll(jump);
+                flipAll(attack);
+                faceRight = false;
+            } else if ((player2Body.getLinearVelocity().x > 0 && !faceRight)) {
+                flipAll(walk);
+                flipAll(jump);
+                flipAll(attack);
+                faceRight = true;
+            }
         }
     }
 

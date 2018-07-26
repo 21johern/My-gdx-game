@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
@@ -22,8 +23,8 @@ public class EnemyMan extends Enemy {
     }
     protected int height;
 
-    public EnemyMan (float x, float y, PlayState playState, Player player) {
-        super(x, y, playState, player);
+    public EnemyMan (float x, float y, World world, Player player) {
+        super(x, y, world, player);
 
 //Replace images once fixed.
         StabCharacter = new Texture("jumpSprite.png");

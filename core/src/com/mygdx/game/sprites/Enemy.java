@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.states.PlayState;
 import com.mygdx.game.states.State;
@@ -35,8 +36,7 @@ public class Enemy {
     protected PolygonShape polygon;
     public int atkCount;
 
-    public Enemy(float x, float y, PlayState playState, Player player){
-        game = playState;
+    public Enemy(float x, float y, World world, Player player){
         this.player = player;
         EnemyMActivity = "none";
         faceRight = true;
@@ -46,7 +46,7 @@ public class Enemy {
         EnemybodyDef = new BodyDef();
         EnemybodyDef.type = BodyDef.BodyType.DynamicBody;
         EnemybodyDef.position.set(x, y);
-        EnemyBody = playState.world.createBody(EnemybodyDef);
+        EnemyBody = world.createBody(EnemybodyDef);
 
         EnemyBody.setFixedRotation(true);
         vel = EnemyBody.getLinearVelocity();

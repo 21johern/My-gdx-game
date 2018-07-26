@@ -28,7 +28,7 @@ import com.mygdx.game.sprites.EnemyMushroom;
 import com.mygdx.game.sprites.EnemySkeleton;
 import com.mygdx.game.sprites.Player;
 
-public class PlayState extends State{
+public class LevelTwo extends State{
     public static final String TAG = PlayState.class.getName();
     public World world;
     public Box2DDebugRenderer debugRenderer;
@@ -36,9 +36,6 @@ public class PlayState extends State{
     private TiledMap map;
     private Player player;
 
-    private EnemyMan enemyMan;
-    private EnemySkeleton enemySkeleton;
-    private EnemyMushroom enemyMushroom;
     Music Swing;
     Music Jump;
     Music Background;
@@ -59,28 +56,25 @@ public class PlayState extends State{
 
 
 
-    public PlayState(GameStateManager stateManager) {
+    public LevelTwo(GameStateManager stateManager) {
         super(stateManager);
-
 
         // Change image to the correct background once we have it
         cam.setToOrtho(false, MyGdxGame.WIDTH*State.PIXEL_TO_METER / 2, MyGdxGame.HEIGHT*State.PIXEL_TO_METER / 2) ;
 
         Box2D.init();
-        world = new World(new Vector2(0, -9.8f), true);
         // the y value here is the gravity
+        world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
-        player = new Player(7, 10, world);
-        enemyMan = new EnemyMan(22,7,world, player);
-        enemySkeleton = new EnemySkeleton(8, 5, world, player);
-        enemyMushroom = new EnemyMushroom(19,23/2,world, player);
+
+        player = new Player(2, 2, world);
         Swing = Gdx.audio.newMusic(Gdx.files.internal("Swing1.mp3"));
         Jump = Gdx.audio.newMusic(Gdx.files.internal("Jump.mp3"));
         Background = Gdx.audio.newMusic(Gdx.files.internal("Background music.mp3"));
 
 
 
-        map = new TmxMapLoader().load("MenuMap.tmx");
+        map = new TmxMapLoader().load("map2.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, State.PIXEL_TO_METER);
         shapeRenderer = new ShapeRenderer();
         Gdx.app.log(TAG, "Application Listener Created");
@@ -95,8 +89,6 @@ public class PlayState extends State{
         lavaObjects = map.getLayers().get("Lava").getObjects();
         lava = new Array<Polygon>();
 
-        exitObjects = map.getLayers().get("Exit").getObjects();
-        exit = new Array<Polygon>();
 
 
 
@@ -128,18 +120,6 @@ public class PlayState extends State{
             lava.add(temp);
             counter++;
         }
-        counter = 0;
-        for (PolygonMapObject obj : exitObjects.getByType(PolygonMapObject.class)) {
-            float[] vertices = obj.getPolygon().getVertices();
-            for (int i = 0; i < vertices.length; i++) {
-                vertices[i] = vertices[i] * State.PIXEL_TO_METER;
-            }
-            Polygon temp = new Polygon();
-            temp.setVertices(vertices);
-            temp.setPosition(obj.getPolygon().getX() * State.PIXEL_TO_METER, obj.getPolygon().getY() * State.PIXEL_TO_METER);
-            exit.add(temp);
-            counter++;
-        }
 
     }
 
@@ -159,24 +139,24 @@ public class PlayState extends State{
         }
 
         if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
-                (player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
-            cam.position.set(200 * State.PIXEL_TO_METER,360 * State.PIXEL_TO_METER, 0);
+                (player.playerBody.getPosition().y >= (456 * State.PIXEL_TO_METER))) {
+            cam.position.set(200 * State.PIXEL_TO_METER,456 * State.PIXEL_TO_METER, 0);
         } else if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER)) &&
                 (player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
             cam.position.set(200 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
-        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER)) &&
-                (player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
-            cam.position.set(600 * State.PIXEL_TO_METER,360 * State.PIXEL_TO_METER, 0);
-        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER)) &&
+        } else if ((player.playerBody.getPosition().x >= (1400 * State.PIXEL_TO_METER)) &&
+                (player.playerBody.getPosition().y >= (456 * State.PIXEL_TO_METER))) {
+            cam.position.set(1400 * State.PIXEL_TO_METER,456 * State.PIXEL_TO_METER, 0);
+        } else if ((player.playerBody.getPosition().x >= (1400 * State.PIXEL_TO_METER)) &&
                 (player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
-            cam.position.set(600 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
+            cam.position.set(1400 * State.PIXEL_TO_METER,120 * State.PIXEL_TO_METER, 0);
         } else if ((player.playerBody.getPosition().x <= (200 * State.PIXEL_TO_METER))) {
             cam.position.set(200 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
-        } else if ((player.playerBody.getPosition().x >= (600 * State.PIXEL_TO_METER))) {
-            cam.position.set(600 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
+        } else if ((player.playerBody.getPosition().x >= (1400 * State.PIXEL_TO_METER))) {
+            cam.position.set(1400 * State.PIXEL_TO_METER,player.playerBody.getPosition().y, 0);
         }
-        else if ((player.playerBody.getPosition().y >= (360 * State.PIXEL_TO_METER))) {
-            cam.position.set(player.playerBody.getPosition().x,360 * State.PIXEL_TO_METER, 0);
+        else if ((player.playerBody.getPosition().y >= (456 * State.PIXEL_TO_METER))) {
+            cam.position.set(player.playerBody.getPosition().x,456 * State.PIXEL_TO_METER, 0);
         }
         else if ((player.playerBody.getPosition().y <= (120 * State.PIXEL_TO_METER))) {
             cam.position.set(player.playerBody.getPosition().x,120 * State.PIXEL_TO_METER, 0);
@@ -192,8 +172,8 @@ public class PlayState extends State{
         Background.setVolume(.2f);
 
         if (controller.isAtkPressed()) {
-           player.attack();
-           Swing.play();
+            player.attack();
+            Swing.play();
         }else if(controller.isUpPressed()) {
             player.jump();
             Jump.play();
@@ -203,9 +183,6 @@ public class PlayState extends State{
             player.walkRight();
         }
         player.update(dt);
-        enemyMan.update(dt);
-        enemySkeleton.update(dt);
-        enemyMushroom.update(dt);
     }
 
     public void lavaCheck(){
@@ -221,8 +198,8 @@ public class PlayState extends State{
     }
 
     public void exitCheck(){
-        if((player.bounds.getX() <= 22) && (player.bounds.getX() >= 21) && (player.bounds.getY() <= 1) && (player.bounds.getX() >= 0)){
-            gsm.set(new LevelTwo(gsm));
+        if((player.bounds.getX()<= 2 && player.bounds.getX()>= 1) && (player.bounds.getY()<= 4 && player.bounds.getY()>= 3)){
+            gsm.set(new BossLevel(gsm));
             dispose();
         }
     }
@@ -234,9 +211,6 @@ public class PlayState extends State{
         renderer.render();
         sb.begin();
         sb.draw(player.getTexture(Gdx.graphics.getDeltaTime()),player.getPosition().x,player.getPosition().y,player.getWidth() * State.PIXEL_TO_METER, player.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyMan.getTexture(),enemyMan.getPosition().x,enemyMan.getPosition().y,enemyMan.getWidth() * State.PIXEL_TO_METER, enemyMan.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemySkeleton.getTexture(),enemySkeleton.getPosition().x,enemySkeleton.getPosition().y,enemySkeleton.getWidth() * State.PIXEL_TO_METER, enemySkeleton.getHeight() * State.PIXEL_TO_METER);
-        sb.draw(enemyMushroom.getTexture(),enemyMushroom.getPosition().x,enemyMushroom.getPosition().y,enemyMushroom.getWidth() * State.PIXEL_TO_METER, enemyMushroom.getHeight() * State.PIXEL_TO_METER);
         sb.end();
 
         shapeRenderer.setProjectionMatrix(cam.combined);
@@ -261,8 +235,5 @@ public class PlayState extends State{
         debugRenderer.dispose();
         floorShape.dispose();
         player.dispose();
-        enemySkeleton.dispose();
-        enemyMan.dispose();
-        enemyMushroom.dispose();
     }
 }
