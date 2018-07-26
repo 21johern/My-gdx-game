@@ -1,7 +1,9 @@
 package com.mygdx.game.states;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObjects;
@@ -81,6 +83,10 @@ public class PlayState extends State{
         Gdx.app.log(TAG, "Application Listener Created");
         //mapObjects = .getLayers().get("Collision");
         controller = new Controller();
+
+        if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
+            Gdx.input.setInputProcessor(controller);
+        }
 
         floorObjects = map.getLayers().get("Ground").getObjects();
         lavaObjects = map.getLayers().get("Lava").getObjects();
@@ -201,6 +207,14 @@ public class PlayState extends State{
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.rect(player.AtkHitbox.getX(),player.AtkHitbox.getY(),player.AtkHitbox.getWidth(),player.AtkHitbox.getHeight());
         shapeRenderer.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rect(cam.position.x - cam.viewportWidth/2, cam.position.y + cam.viewportHeight/2 - 0.5f, 2, 0.5f);
+        shapeRenderer.setColor(Color.GOLD);
+        shapeRenderer.rect(cam.position.x - cam.viewportWidth/2, cam.position.y + cam.viewportHeight/2 - 0.5f, 1, 0.5f);
+        shapeRenderer.end();
+
         controller.draw();
         cam.update();
         debugRenderer.render(world, cam.combined);
