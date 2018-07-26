@@ -116,7 +116,7 @@ public class Player {
         region = new TextureRegion();
 
         stateTime = 0;
-        health = 2;
+        health = 10;
         Activity = "none";
         LastActivity = "none";
         isAttacking = false;
