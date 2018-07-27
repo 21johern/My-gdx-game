@@ -131,8 +131,8 @@ public class Player {
 
         polygon = new PolygonShape();
         bounds = new Polygon();
-        bounds.setVertices(new float[] {((getWidth()/5) * State.PIXEL_TO_METER), 0,((getWidth()-2) * State.PIXEL_TO_METER), 0,
-                ((getWidth()-2) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER), ((getWidth()/5) * State.PIXEL_TO_METER), ((getHeight()-4) * State.PIXEL_TO_METER)});
+        bounds.setVertices(new float[] {((getWidth()/5+2) * State.PIXEL_TO_METER), 0,((getWidth()-8) * State.PIXEL_TO_METER), 0,
+                ((getWidth()-8) * State.PIXEL_TO_METER), ((getHeight()-10) * State.PIXEL_TO_METER), ((getWidth()/5+2) * State.PIXEL_TO_METER), ((getHeight()-10) * State.PIXEL_TO_METER)});
         polygon.set(bounds.getVertices());
 
         AtkHitbox = new Rectangle();
@@ -184,14 +184,14 @@ public class Player {
 
     public void walkLeft() {
         if(vel.x < MAX_VELOCITY) {
-            playerBody.applyLinearImpulse(-.1f, 0f, getPosition().x / 2, getPosition().y / 2, true);
+            playerBody.applyLinearImpulse(-.05f, 0f, getPosition().x / 2, getPosition().y / 2, true);
         }
         isAttacking = false;
         isJumping = false;
     }
     public void walkRight() {
         if(vel.x > -MAX_VELOCITY){
-            playerBody.applyLinearImpulse(.1f,0f,getPosition().x/2,getPosition().y/2,true);
+            playerBody.applyLinearImpulse(.05f,0f,getPosition().x/2,getPosition().y/2,true);
         }
         isAttacking = false;
         isJumping = false;
